@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -18,18 +18,17 @@ const useStyles = makeStyles({
   }
 });
 
-function createData(name, description, stock) {
-  return { name, description, stock };
-}
-
-const rows = [
-  createData('Panadol', "Boost imunity", "10" ),
-  createData('Antangin', "Help cure disease", "20"),
-  createData('Diapet', "Maintain health", "5"),
-];
-
 export default function Medicines() {
   const classes = useStyles();
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/medicines')
+        .then(res => res.json())
+        .then(result => {
+            setRows(result);
+        })
+  }, [])
 
   return (
     <Container>
