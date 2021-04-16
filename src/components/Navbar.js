@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import { Link } from "react-router-dom";
 
 
+
 const useStyles = makeStyles((theme) => ({
   '@global': {
     ul: {
@@ -37,7 +38,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function Navbar() {
+  
   const classes = useStyles();
 
   return (
@@ -48,28 +51,22 @@ export default function Navbar() {
             <img src="https://i.imgur.com/RUjVrWs.png" style={{width: "60px"}} alt="logo Mamed"/>
           </Link>
         </Typography>
-        <nav>
-          <Link to="/doctors" variant="button" color="textPrimary" className={classes.link}>
-            List Doctors
-          </Link>
-          <Link variant="button" color="textPrimary" to="/medicines" className={classes.link}>
-            List Medicines
-          </Link>
-          <Link variant="button" color="textPrimary" to="/addDoctor" className={classes.link}>
-            Add Doctor
-          </Link>
-          <Link variant="button" color="textPrimary" to="/addMedicine" className={classes.link}>
-            Add Medicine
-          </Link>
-          <Link variant="button" color="textPrimary" to="/appointments" className={classes.link}>
-            Appointment
-          </Link>
-        </nav>
-        <Link to="/login">
-          <Button href="#" color="primary" variant="outlined" className={classes.link}>
-            Login
-          </Button>
-        </Link>
+          <div>
+            <Link to="/doctors" className={classes.link}>
+              List Doctors
+            </Link>
+            <Link to="/medicines" className={classes.link}>
+              List Medicines
+            </Link>
+            <Link to="/appointments" className={classes.link}>
+              Appointment
+            </Link>
+            <Link to="/login">
+              <Button href="#" color="primary" variant="outlined" className={classes.link}>
+                Login
+              </Button>
+            </Link>
+          </div>
       </Toolbar>
     </AppBar>
   )
