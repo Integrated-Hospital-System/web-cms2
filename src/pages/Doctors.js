@@ -110,7 +110,7 @@ const useStyles2 = makeStyles({
 export default function CustomPaginationActionsTable() {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filter, setFilter] = useState('');
   const [rows, setRows] = useState([]);
 
