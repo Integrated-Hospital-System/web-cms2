@@ -4,10 +4,11 @@ import Navbar from './components/Navbar'
 import { Login, Home, Doctors, Medicines, AddDoctor, AddMedicine, Appointments, AddOrders} from './pages'
 
 function App() {
+
   return (
     <div className="App">
       <Router>
-          <Navbar />
+        <Navbar />
           <div>
             <Switch>
               <Route path="/addOrders">
