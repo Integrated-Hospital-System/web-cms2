@@ -7,7 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Container } from '@material-ui/core';
 
 const useStyles = makeStyles({
   table: {
@@ -29,13 +28,10 @@ const rows = [
   createData('Larry', "Larry", "eye", "Sunday", "08.00-12.00"),
 ];
 
-export default function Home() {
+export default function BasicTable() {
   const classes = useStyles();
 
   return (
-    <Container>
-    <h3> List of all doctors </h3>
-
     <TableContainer component={Paper}>
       <Table className={ classes.table } aria-label="simple table">
         <TableHead className = { classes.header }>
@@ -62,6 +58,5 @@ export default function Home() {
         </TableBody>
       </Table>
     </TableContainer>
-    </Container>
   );
 }
