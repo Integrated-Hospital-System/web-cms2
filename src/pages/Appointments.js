@@ -8,6 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Button, Container } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   table: {
@@ -30,6 +31,11 @@ const rows = [
 
 export default function Appointments() {
   const classes = useStyles();
+  const history = useHistory()
+
+  const addOrders = () => {
+    history.push('/addOrders')
+  }
 
   return (
     <Container>
@@ -56,7 +62,7 @@ export default function Appointments() {
               <TableCell align="left">{ row.gender }</TableCell>
               <TableCell align="left">{ row.comorbid }</TableCell>
               <TableCell align="left"> 
-                <Button variant="contained" color="primary">
+                <Button variant="contained" style={{backgroundColor: "#1de9b6"}} onClick={() => addOrders()}>
                 Process
                 </Button> </TableCell>
             </TableRow>
