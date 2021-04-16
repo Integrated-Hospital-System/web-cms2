@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -28,8 +28,35 @@ const rows = [
   createData('Larry', "Larry", "eye", "Sunday", "08.00-12.00"),
 ];
 
+const medic = { "medicines" : [
+  {
+      "id" : "1",
+      "name" : "panadol",
+      "description" : "sakit kepala",
+      "stock" : 900
+  },
+  {
+      "id" : "2",
+      "name" : "vitamin D",
+      "description" : "vitamin",
+      "stock" : 3
+  },
+  {
+      "id" : "3",
+      "name" : "sakatonik",
+      "description" : "vitamin",
+      "stock" : 0
+  }
+  ]
+}
+
 export default function MedicineList() {
   const classes = useStyles();
+  const [medicine, setMedicine] = useState(medic.medicines);
+  
+  useEffect(() => {
+    console.log('ayam');
+  })
 
   return (
     <TableContainer component={Paper}>
