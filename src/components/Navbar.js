@@ -4,7 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 
@@ -38,11 +38,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function Navbar() {
-
-  const { path } = useRouteMatch()
-
+  
   const classes = useStyles();
+
   return (
     <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
@@ -51,22 +51,12 @@ export default function Navbar() {
             <img src="https://i.imgur.com/RUjVrWs.png" style={{width: "60px"}} alt="logo Mamed"/>
           </Link>
         </Typography>
-        {
-          path === "/login" ? 
-          <div></div>
-          :
-          <nav>
+          <div>
             <Link to="/doctors" className={classes.link}>
               List Doctors
             </Link>
             <Link to="/medicines" className={classes.link}>
               List Medicines
-            </Link>
-            <Link to="/addDoctor" className={classes.link}>
-              Add Doctor
-            </Link>
-            <Link to="/addMedicine" className={classes.link}>
-              Add Medicine
             </Link>
             <Link to="/appointments" className={classes.link}>
               Appointment
@@ -76,8 +66,7 @@ export default function Navbar() {
                 Login
               </Button>
             </Link>
-          </nav>
-        }
+          </div>
       </Toolbar>
     </AppBar>
   )

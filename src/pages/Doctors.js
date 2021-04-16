@@ -7,7 +7,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Container } from '@material-ui/core';
+import { Button, Container } from '@material-ui/core';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles({
   table: {
@@ -31,11 +32,24 @@ const rows = [
 
 export default function Doctors() {
   const classes = useStyles();
+  const history = useHistory()
+
+  const addDoctor = () => {
+    history.push('/addDoctor')
+  }
 
   return (
     <Container>
     <h3> List of all doctors </h3>
-
+    <div style={{float: "right", marginBottom: "10px"}}>
+      <Button
+        variant="contained"
+        style={{backgroundColor: "#1de9b6", textAlign: "right"}}
+        onClick={() => addDoctor()}
+      >
+        Add Doctor
+      </Button>
+    </div>
     <TableContainer component={Paper}>
       <Table className={ classes.table } aria-label="simple table">
         <TableHead className = { classes.header }>
