@@ -15,16 +15,16 @@ const useStyles = makeStyles({
     minWidth: 650,
   },
   header: {
-    fontWeight: "bold",
+    fontWeight: "bold"
   },
   addButton: {
-    marginBottom: 30,
+    marginBottom: 20,
     backgroundColor: '#00F6B5',
     color: '#3075B5'
   }
 });
 
-export default function Home() {
+export default function Doctors() {
   const classes = useStyles();
 
   const [rows, setRows] = useState([]);
@@ -57,23 +57,23 @@ export default function Home() {
     <Button variant="contained" color="primary" className = { classes.addButton } onClick = {() => addDoctor() }>Add New Doctor</Button>
     <TableContainer component={Paper}>
       <Table className={ classes.table } aria-label="simple table">
-        <TableHead className = { classes.header }>
-          <TableRow fontWeight="fontWeightBold">
-            <TableCell align="center"> No </TableCell>
-            <TableCell align="left">Username</TableCell>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Specialty</TableCell>
-            <TableCell align="left">Available Day</TableCell>
-            <TableCell align="left">Available Time</TableCell>
+        <TableHead >
+          <TableRow>
+              <TableCell align="center" className= { classes.header }> No </TableCell>
+              <TableCell align="left" className= { classes.header }>Email</TableCell>
+              <TableCell align="left" className= { classes.header }>Name</TableCell>
+              <TableCell align="left" className= { classes.header }>Specialty</TableCell>
+              <TableCell align="left" className= { classes.header }>Available Day</TableCell>
+              <TableCell align="left" className= { classes.header }>Available Time</TableCell> 
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row, index) => (
             <TableRow key={ index }>
               <TableCell align="center"> { index + 1 } </TableCell>
-              <TableCell component="th" scope="row"> { row.username } </TableCell>
+              <TableCell component="th" scope="row"> { row.email } </TableCell>
               <TableCell align="left">{ row.name }</TableCell>
-              <TableCell align="left">{ row.speciality.join(' ') }</TableCell>
+              <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
               <TableCell align="left">{ row.practice.day }</TableCell>
               <TableCell align="left">{ row.practice.start } - { row.practice.end }</TableCell>
             </TableRow>
