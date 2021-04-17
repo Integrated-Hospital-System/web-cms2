@@ -29,9 +29,19 @@ const UseStyles = makeStyles((theme) => ({
 export default function AddDoctor() {
   const classes = UseStyles();
   const [rows, setRows] = useState([]);
+  const [practice, setPractice] = useState({
+    day: '',
+    start : new Date(),
+    end : new Date()
+  })
 
   function handleChange(event) {
+    console.log(event);
+  }
 
+  function setStart (event) {
+    let newTime = { ...practice, start : event };
+    setPractice(newTime);
   }
 
   return (
@@ -127,7 +137,7 @@ export default function AddDoctor() {
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             onChange={handleChange}
-            value = { 'Friday' }
+            value = { practice.day }
             name = "day"
           >
             <MenuItem value={ 'Sunday' }>Sunday</MenuItem>
@@ -142,7 +152,7 @@ export default function AddDoctor() {
           <br></br>
 
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <TimePicker onChange={handleChange} name="start" label= "start" style={{marginTop : 20}} />
+            <TimePicker value = { practice.start } onChange={ (newValue) => setStart(newValue) } name="start" label= "start" style={{marginTop : 20}} />
             <TimePicker onChange={handleChange} name="end" label= "end" style={{marginTop : 20, marginBottom: 20}} />
           </MuiPickersUtilsProvider>
           <Button
