@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Container, TextField, Button } from '@material-ui/core'
 import swal from 'sweetalert';
 import { useHistory, useParams } from 'react-router';
+import axios from '../axios/axios';
 
-export default function AddMedicine() {
+export default function EditMedicine() {
   const [medicine, setMedicine] = useState({
     name: '',
     description: '',
@@ -14,16 +15,19 @@ export default function AddMedicine() {
   const history = useHistory();
 
   useEffect(() => {
-    fetch('http://localhost:3001/medicines/' + params.id)
-        .then(res => res.json())
-        .then(result => {
-          let getMedicine = {
-            name : result.name,
-            description : result.description,
-            stock : result.stock
-          }
-          setMedicine(getMedicine);
-        })
+    axios({
+      method: 'GET',
+      url : 'http://localhost:3001/medicines/' + params.id
+    })
+      .then(resultAxios => {
+        let result = resultAxios.data;
+        let getMedicine = {
+          name : result.name,
+          description : result.description,
+          stock : result.stock
+        }
+        setMedicine(getMedicine);
+      })
   }, [])
 
   function handleChange (event) {
@@ -44,11 +48,18 @@ export default function AddMedicine() {
 
   function handleSubmit (event) {
     event.preventDefault();
-    fetch('http://localhost:3001/medicines/' + params.id, requestOptions)
-      .then(response => response.json())
-      .then(data => {
+  
+    axios({
+      method : 'PUT',
+      url: '/medicines/' + params.id,
+      data : medicine
+    })
+      .then(accounts => {
         swal("Success edit medicine", "Medicine edited!", "success");
         history.push('/medicines');
+      })
+      .catch(err => {
+        console.log(err);
       })
   }
 
