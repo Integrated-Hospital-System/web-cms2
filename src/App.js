@@ -1,7 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Navbar from './components/Navbar'
-import { Login, Home, Doctors, Medicines, AddDoctor, AddMedicine, Appointments, AddOrders} from './pages'
+import { Login, Home, Doctors, Medicines, AddDoctor, AddMedicine, Appointments, AddOrders, EditMedicine } from './pages'
 
 function App() {
 
@@ -20,6 +20,7 @@ function App() {
       <Route path="/addOrders" component={AddOrders} />
       <Route path="/appointments" component={Appointments} />
       <Route path="/addMedicine" component={AddMedicine} />
+      <Route path="/editMedicine/:id" component={EditMedicine} />
       <Route path="/addDoctor" component={AddDoctor} />
       <Route path="/medicines" component={Medicines} />
       <Route path="/doctors" component={Doctors} />

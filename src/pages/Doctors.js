@@ -31,7 +31,8 @@ const useStyles1 = makeStyles((theme) => ({
   addButton: {
     marginBottom: 20,
     backgroundColor: '#00F6B5',
-    color: '#3075B5'
+    color: '#3075B5',
+    float: 'right'
   }
 }));
 
@@ -103,11 +104,12 @@ const useStyles2 = makeStyles({
   addButton: {
     marginBottom: 20,
     backgroundColor: '#00F6B5',
-    color: '#3075B5'
+    textAlign: 'right',
+    color : 'black'
   }
 });
 
-export default function CustomPaginationActionsTable() {
+export default function Doctors() {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -156,13 +158,17 @@ export default function CustomPaginationActionsTable() {
   return (
     <Container>
     <h3> List of all doctors </h3>
-    <Button variant="contained" color="primary" className = { classes.addButton } onClick = {() => addDoctor() }>Add New Doctor</Button>
+
+    <div style={{float: "right", marginBottom: "10px"}}>
+      <Button variant="contained" style={{ backgroundColor: "#1de9b6" }} className = { classes.addButton } onClick = {() => addDoctor() }>Add New Doctor</Button>  
+    </div>
+
     <div>
       <TextField id="standard-basic" label="Search Doctor name" onChange = { event => searchDoctor(event) }/>
     </div>
 
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="custom pagination table">
+      <Table className={classes.table} stickyHeader aria-label="custom pagination table">
         <TableHead >
           <TableRow>
               <TableCell align="left" className= { classes.header }>Email</TableCell>

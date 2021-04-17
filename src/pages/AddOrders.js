@@ -87,6 +87,15 @@ export default function addOrders() {
                 label="Total Medicines"
                 name="total"
               />
+              <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="note"
+              label="Notes"
+              name="notes"
+            />
               <Button
                 type="submit"
                 fullWidth
