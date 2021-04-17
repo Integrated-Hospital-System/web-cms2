@@ -119,13 +119,17 @@ export default function Doctors() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3001/medicines')
-        .then(res => res.json())
-        .then(result => {
-          setRows(result);
-        })
-
-    
+    axios({
+      method : 'GET',
+      url : '/medicines'
+    })
+      .then(medicinesRes => {
+        let medicines = medicinesRes.data;
+        setRows(medicines);
+      })
+      .catch(err => {
+        console.log(err);
+      })     
   }, [])
 
   const rowsToShow = filter === "" ? rows : rows.filter(row => row.name.toLowerCase().includes(filter.toLowerCase()));
@@ -151,32 +155,34 @@ export default function Doctors() {
     setFilter(event.target.value);
   }
 
-  const requestOptions = {
-    method: 'DELETE',
-    headers: { 'Content-Type' : 'application/json' },
-  }
-
   function deleteMedicine (id) {
-    fetch('http://localhost:3001/medicines/' + id, requestOptions)
-      .then(response => response.json())
-      .then(data => swal({
+      swal({
         title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this medicine!",
+        text: "Once deleted, you will not be able to recover this medicines!",
         icon: "warning",
         buttons: true,
         dangerMode: true,
       })
       .then((willDelete) => {
         if (willDelete) {
-          swal("Poof! Your medicine has been deleted!", {
-            icon: "success",
-          });
-          let newRows = rows.filter(row => row.id !== id);
-          setRows(newRows);
+          axios({
+            method : 'DELETE',
+            url: '/medicines/' + id
+          })
+            .then(({ data }) => {
+              swal("Poof! Your medicines has been deleted!", {
+                icon: "success",
+              });
+              let newRows = rows.filter(row => row.id !== id);
+              setRows(newRows);
+            })
+            .catch(err => {
+              console.log(err);
+            })
         } else {
-          swal("Your medicine is safe!");
+          swal("Your medicines is safe!");
         }
-      }))
+      });
   }
 
   function editMedicine (id) {

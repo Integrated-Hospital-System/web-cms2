@@ -126,6 +126,12 @@
       "description": "vitamin",
       "stock": "6",
       "id": "3"
+    },
+    {
+      "name": "podes",
+      "description": "ayam bakar",
+      "stock": "2",
+      "id": "f2hgyUq"
     }
   ],
   "appointments": [

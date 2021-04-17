@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Container, TextField, Button } from '@material-ui/core'
 import swal from 'sweetalert';
+import axios from '../axios/axios';
 
 export default function AddMedicine() {
   const [medicine, setMedicine] = useState({
@@ -27,9 +28,17 @@ export default function AddMedicine() {
 
   function handleSubmit (event) {
     event.preventDefault();
-    fetch('http://localhost:3001/medicines', requestOptions)
-      .then(response => response.json())
-      .then(data => swal("Success add medicine", "Medicine added!", "success"))
+    axios({
+      method : 'POST',
+      url: '/medicines',
+      data : medicine
+    })
+      .then(accounts => {
+        swal("Success add medicine", "Medicine added!", "success");
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   return (

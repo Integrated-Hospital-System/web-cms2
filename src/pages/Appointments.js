@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Button, Container } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import axios from '../axios/axios';
 
 const useStyles = makeStyles({
   table: {
@@ -25,14 +26,20 @@ export default function Appointments() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3001/appointments')
-        .then(res => res.json())
-        .then(result => {
-          let completedFalse = result.filter(result => result.isCompleted === false);
+    axios({
+      method: 'GET',
+      url : '/appointments'
+    })
+      .then(result => {
+        result = result.data;
+        let completedFalse = result.filter(result => result.isCompleted === false);
           
-          let patient = completedFalse.map(result => result.patient);
-          setRows(patient);
-        })
+        let patient = completedFalse.map(result => result.patient);
+        setRows(patient);
+      })
+      .catch (err => {
+        console.log(err);
+      })
   }, [])
 
   const addOrders = () => {
