@@ -16,8 +16,6 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import { Button, Container, TableHead, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router';
-import swal from 'sweetalert';
-import axios from '../axios/axios';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -33,7 +31,7 @@ const useStyles1 = makeStyles((theme) => ({
   addButton: {
     marginBottom: 20,
     backgroundColor: '#00F6B5',
-    
+    color: '#3075B5',
     float: 'right'
   }
 }));
@@ -106,8 +104,8 @@ const useStyles2 = makeStyles({
   addButton: {
     marginBottom: 20,
     backgroundColor: '#00F6B5',
-    color: 'black',
-    textAlign: 'right'
+    textAlign: 'right',
+    color : 'black'
   }
 });
 
@@ -119,13 +117,19 @@ export default function Doctors() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3001/medicines')
+    fetch('http://localhost:3001/accounts')
         .then(res => res.json())
         .then(result => {
-          setRows(result);
+            let dokter = result.filter(dok => dok.role === "doctor")
+            let kumpulanPraktek = [];
+            dokter.forEach(element => {
+              element.practice.forEach(jadwal => {
+                let object = { ...element, practice : jadwal }
+                kumpulanPraktek.push(object);
+              });
+            });
+            setRows(kumpulanPraktek);
         })
-
-    
   }, [])
 
   const rowsToShow = filter === "" ? rows : rows.filter(row => row.name.toLowerCase().includes(filter.toLowerCase()));
@@ -143,67 +147,35 @@ export default function Doctors() {
 
   const history = useHistory();
 
-  function addMedicine () {
-    history.push('/addMedicine');
+  function addDoctor () {
+    history.push('/addDoctor');
   }
 
-  function searchMedicines (event) {
+  function searchDoctor (event) {
     setFilter(event.target.value);
-  }
-
-  const requestOptions = {
-    method: 'DELETE',
-    headers: { 'Content-Type' : 'application/json' },
-  }
-
-  function deleteMedicine (id) {
-    fetch('http://localhost:3001/medicines/' + id, requestOptions)
-      .then(response => response.json())
-      .then(data => swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this medicine!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      })
-      .then((willDelete) => {
-        if (willDelete) {
-          swal("Poof! Your medicine has been deleted!", {
-            icon: "success",
-          });
-          let newRows = rows.filter(row => row.id !== id);
-          setRows(newRows);
-        } else {
-          swal("Your medicine is safe!");
-        }
-      }))
-  }
-
-  function editMedicine (id) {
-    history.push('/editMedicine/' + id);
   }
 
   return (
     <Container>
-    <h3> List of all Medicines </h3>
+    <h3> List of all doctors </h3>
 
     <div style={{float: "right", marginBottom: "10px"}}>
-      <Button variant="contained" style={{backgroundColor: "#1de9b6"}} className = { classes.addButton } onClick = {() => addMedicine() }>Add New Medicines</Button>  
+      <Button variant="contained" style={{ backgroundColor: "#1de9b6" }} className = { classes.addButton } onClick = {() => addDoctor() }>Add New Doctor</Button>  
     </div>
 
     <div>
-      <TextField id="standard-basic" label="Search Medicines" onChange = { event => searchMedicines(event) }/>
+      <TextField id="standard-basic" label="Search Doctor name" onChange = { event => searchDoctor(event) }/>
     </div>
 
     <TableContainer component={Paper}>
       <Table className={classes.table} stickyHeader aria-label="custom pagination table">
         <TableHead >
           <TableRow>
-            <TableCell align="left" className= { classes.header }>Name</TableCell>
-            <TableCell align="left" className= { classes.header }>Description</TableCell>
-            <TableCell align="left" className= { classes.header }>Stock</TableCell>
-            <TableCell align="left" className= { classes.header }>Stock</TableCell>
-
+              <TableCell align="left" className= { classes.header }>Email</TableCell>
+              <TableCell align="left" className= { classes.header }>Name</TableCell>
+              <TableCell align="left" className= { classes.header }>Specialty</TableCell>
+              <TableCell align="left" className= { classes.header }>Available Day</TableCell>
+              <TableCell align="left" className= { classes.header }>Available Time</TableCell> 
           </TableRow>
         </TableHead>
         <TableBody>
@@ -212,14 +184,11 @@ export default function Doctors() {
             : rowsToShow
           ).map((row, index) => (
             <TableRow key={ index }>
-              <TableCell component="th" scope="row"> { row.name } </TableCell>
-              <TableCell align="left">{ row.description }</TableCell>
-              <TableCell align="left">{ row.stock }</TableCell>
-              <TableCell align="left">
-                <Button variant="contained" color="primary" style={{ marginRight: 30 }} onClick = { () => editMedicine(row.id) }>Edit</Button>
-                <Button variant="contained" color="secondary" onClick = { () => deleteMedicine(row.id) } >Delete</Button>
-              </TableCell>
-
+              <TableCell component="th" scope="row"> { row.email } </TableCell>
+              <TableCell align="left">{ row.name }</TableCell>
+              <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
+              <TableCell align="left">{ row.practice.day }</TableCell>
+              <TableCell align="left">{ row.practice.start } - { row.practice.end }</TableCell>
             </TableRow>
           ))}
 
