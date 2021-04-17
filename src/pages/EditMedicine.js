@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, TextField, Button } from '@material-ui/core'
 import swal from 'sweetalert';
+import { useHistory, useParams } from 'react-router';
 
 export default function AddMedicine() {
   const [medicine, setMedicine] = useState({
@@ -8,6 +9,22 @@ export default function AddMedicine() {
     description: '',
     stock: ''
   })
+
+  const params = useParams();
+  const history = useHistory();
+
+  useEffect(() => {
+    fetch('http://localhost:3001/medicines/' + params.id)
+        .then(res => res.json())
+        .then(result => {
+          let getMedicine = {
+            name : result.name,
+            description : result.description,
+            stock : result.stock
+          }
+          setMedicine(getMedicine);
+        })
+  }, [])
 
   function handleChange (event) {
     const target = event.target;
@@ -20,21 +37,24 @@ export default function AddMedicine() {
   }
 
   const requestOptions = {
-    method: 'POST',
+    method: 'PUT',
     headers: { 'Content-Type' : 'application/json' },
     body: JSON.stringify(medicine) 
   }
 
   function handleSubmit (event) {
     event.preventDefault();
-    fetch('http://localhost:3001/medicines', requestOptions)
+    fetch('http://localhost:3001/medicines/' + params.id, requestOptions)
       .then(response => response.json())
-      .then(data => swal("Success add medicine", "Medicine added!", "success"))
+      .then(data => {
+        swal("Success edit medicine", "Medicine edited!", "success");
+        history.push('/medicines');
+      })
   }
 
   return (
     <Container style={{width: "60%", border: "1"}}>
-      <h3 style={{textAlign: "center"}}>Add Medicine</h3>
+      <h3 style={{textAlign: "center"}}>Edit Medicine</h3>
       <form noValidate onSubmit = { handleSubmit }>
         <TextField
           variant="outlined"
@@ -44,6 +64,7 @@ export default function AddMedicine() {
           id="name"
           label="Name"
           name="name"
+          value = { medicine.name }
           onChange = { handleChange }
         />
         <TextField
@@ -54,6 +75,7 @@ export default function AddMedicine() {
           id="description"
           label="Description"
           name="description"
+          value = { medicine.description }
           onChange = { handleChange }
         />
         <TextField
@@ -65,6 +87,7 @@ export default function AddMedicine() {
           id="stock"
           label="Stock"
           name="stock"
+          value = { medicine.stock }
           onChange = { handleChange }
         />
         <Button

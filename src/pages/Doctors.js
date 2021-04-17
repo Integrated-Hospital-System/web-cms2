@@ -160,7 +160,7 @@ export default function Doctors() {
     <h3> List of all doctors </h3>
 
     <div style={{float: "right", marginBottom: "10px"}}>
-      <Button variant="contained" color="primary" className = { classes.addButton } onClick = {() => addDoctor() }>Add New Doctor</Button>  
+      <Button variant="contained" style={{ backgroundColor: "#1de9b6" }} className = { classes.addButton } onClick = {() => addDoctor() }>Add New Doctor</Button>  
     </div>
 
     <div>

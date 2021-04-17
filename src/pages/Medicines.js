@@ -16,6 +16,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import { Button, Container, TableHead, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router';
+import swal from 'sweetalert';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -139,7 +140,7 @@ export default function Doctors() {
 
   const history = useHistory();
 
-  function addDoctor () {
+  function addMedicine () {
     history.push('/addMedicine');
   }
 
@@ -147,12 +148,44 @@ export default function Doctors() {
     setFilter(event.target.value);
   }
 
+  const requestOptions = {
+    method: 'DELETE',
+    headers: { 'Content-Type' : 'application/json' },
+  }
+
+  function deleteMedicine (id) {
+    fetch('http://localhost:3001/medicines/' + id, requestOptions)
+      .then(response => response.json())
+      .then(data => swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this medicine!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          swal("Poof! Your medicine has been deleted!", {
+            icon: "success",
+          });
+          let newRows = rows.filter(row => row.id !== id);
+          setRows(newRows);
+        } else {
+          swal("Your medicine is safe!");
+        }
+      }))
+  }
+
+  function editMedicine (id) {
+    history.push('/editMedicine/' + id);
+  }
+
   return (
     <Container>
     <h3> List of all Medicines </h3>
 
     <div style={{float: "right", marginBottom: "10px"}}>
-      <Button variant="contained" color="primary" className = { classes.addButton } onClick = {() => addDoctor() }>Add New Medicines</Button>  
+      <Button variant="contained" style={{backgroundColor: "#1de9b6"}} className = { classes.addButton } onClick = {() => addMedicine() }>Add New Medicines</Button>  
     </div>
 
     <div>
@@ -166,6 +199,8 @@ export default function Doctors() {
             <TableCell align="left" className= { classes.header }>Name</TableCell>
             <TableCell align="left" className= { classes.header }>Description</TableCell>
             <TableCell align="left" className= { classes.header }>Stock</TableCell>
+            <TableCell align="left" className= { classes.header }>Stock</TableCell>
+
           </TableRow>
         </TableHead>
         <TableBody>
@@ -177,6 +212,11 @@ export default function Doctors() {
               <TableCell component="th" scope="row"> { row.name } </TableCell>
               <TableCell align="left">{ row.description }</TableCell>
               <TableCell align="left">{ row.stock }</TableCell>
+              <TableCell align="left">
+                <Button variant="contained" color="primary" style={{ marginRight: 30 }} onClick = { () => editMedicine(row.id) }>Edit</Button>
+                <Button variant="contained" color="secondary" onClick = { () => deleteMedicine(row.id) } >Delete</Button>
+              </TableCell>
+
             </TableRow>
           ))}
 
