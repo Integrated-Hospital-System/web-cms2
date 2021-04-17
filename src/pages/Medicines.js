@@ -208,7 +208,7 @@ export default function Doctors() {
             <TableCell align="left" className= { classes.header }>Name</TableCell>
             <TableCell align="left" className= { classes.header }>Description</TableCell>
             <TableCell align="left" className= { classes.header }>Stock</TableCell>
-            <TableCell align="left" className= { classes.header }>Stock</TableCell>
+            <TableCell align="left" className= { classes.header }>Options</TableCell>
 
           </TableRow>
         </TableHead>

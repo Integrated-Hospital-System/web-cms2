@@ -20,12 +20,6 @@ export default function AddMedicine() {
     setMedicine(newMedicine);
   }
 
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type' : 'application/json' },
-    body: JSON.stringify(medicine) 
-  }
-
   function handleSubmit (event) {
     event.preventDefault();
     axios({
