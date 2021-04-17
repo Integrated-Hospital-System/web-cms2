@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
   header: {
     fontWeight: "bold",
-  }
+  },
 });
 
 function createData(name, age, gender, comorbid) {
@@ -31,7 +31,18 @@ const rows = [
 
 export default function Appointments() {
   const classes = useStyles();
-  const history = useHistory()
+  const history = useHistory();
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/appointments')
+        .then(res => res.json())
+        .then(result => {
+          let completedFalse = result.filter(result => result.isCompleted === false);
+          let patient = completedFalse.map(result => result.patient);
+          setRows(patient);
+        })
+  }, [])
 
   const addOrders = () => {
     history.push('/addOrders')
@@ -45,17 +56,17 @@ export default function Appointments() {
       <Table className={ classes.table } aria-label="simple table">
         <TableHead className = { classes.header }>
           <TableRow fontWeight="fontWeightBold">
-            <TableCell align="center"> No </TableCell>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Age</TableCell>
-            <TableCell align="left">Gender</TableCell>
-            <TableCell align="left">Comorbid</TableCell>
-            <TableCell align="left"></TableCell>
+            <TableCell align="center" className= { classes.header }> No </TableCell>
+            <TableCell align="left" className= { classes.header }>Name</TableCell>
+            <TableCell align="left" className= { classes.header }>Age</TableCell>
+            <TableCell align="left" className= { classes.header }>Gender</TableCell>
+            <TableCell align="left" className= { classes.header }>Comorbid</TableCell>
+            <TableCell align="left" className= { classes.header }></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row, index) => (
-            <TableRow key={ row.name }>
+            <TableRow key={ row.id }>
               <TableCell align="center"> { index + 1 } </TableCell>
               <TableCell component="th" scope="row"> { row.name } </TableCell>
               <TableCell align="left">{ row.age }</TableCell>

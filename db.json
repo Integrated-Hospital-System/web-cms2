@@ -116,10 +116,10 @@
       "id": "1"
     },
     {
-      "id": "2",
       "name": "vitamin D",
       "description": "vitamin",
-      "stock": 3
+      "stock": "8",
+      "id": "2"
     },
     {
       "name": "sakatonik",
