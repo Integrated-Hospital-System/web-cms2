@@ -16,6 +16,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import { Button, Container, TableHead, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router';
+import axios from '../axios/axios';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -117,19 +118,18 @@ export default function Doctors() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3001/accounts')
-        .then(res => res.json())
-        .then(result => {
-            let dokter = result.filter(dok => dok.role === "doctor")
-            let kumpulanPraktek = [];
-            dokter.forEach(element => {
-              element.practice.forEach(jadwal => {
-                let object = { ...element, practice : jadwal }
-                kumpulanPraktek.push(object);
-              });
-            });
-            setRows(kumpulanPraktek);
-        })
+    axios({
+      method : 'GET',
+      url: '/accounts'
+    })
+      .then(accounts => {
+        let result = accounts.data;
+        let dokter = result.filter(dok => dok.role === "doctor")
+        setRows(dokter);
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }, [])
 
   const rowsToShow = filter === "" ? rows : rows.filter(row => row.name.toLowerCase().includes(filter.toLowerCase()));

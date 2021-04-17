@@ -40,12 +40,6 @@ export default function EditMedicine() {
     setMedicine(newMedicine);
   }
 
-  const requestOptions = {
-    method: 'PUT',
-    headers: { 'Content-Type' : 'application/json' },
-    body: JSON.stringify(medicine) 
-  }
-
   function handleSubmit (event) {
     event.preventDefault();
   

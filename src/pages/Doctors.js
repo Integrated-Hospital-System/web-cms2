@@ -17,6 +17,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import { Button, Container, TableHead, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import axios from '../axios/axios';
+import Row from './Row';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -171,25 +172,18 @@ export default function Doctors() {
       <Table className={classes.table} stickyHeader aria-label="custom pagination table">
         <TableHead >
           <TableRow>
-              <TableCell align="left" className= { classes.header }>Email</TableCell>
-              <TableCell align="left" className= { classes.header }>Name</TableCell>
-              <TableCell align="left" className= { classes.header }>Specialty</TableCell>
-              <TableCell align="left" className= { classes.header }>Available Day</TableCell>
-              <TableCell align="left" className= { classes.header }>Available Time</TableCell> 
-          </TableRow>
+            <TableCell />
+            <TableCell align="left" className= { classes.header }>Email</TableCell>
+            <TableCell align="left" className= { classes.header }>Name</TableCell>
+            <TableCell align="left" className= { classes.header }>Specialty</TableCell>
+        </TableRow>
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
             ? rowsToShow.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rowsToShow
           ).map((row, index) => (
-            <TableRow key={ index }>
-              <TableCell component="th" scope="row"> { row.email } </TableCell>
-              <TableCell align="left">{ row.name }</TableCell>
-              <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
-              <TableCell align="left">{ row.practice.day }</TableCell>
-              <TableCell align="left">{ row.practice.start } - { row.practice.end }</TableCell>
-            </TableRow>
+            <Row key = { index } row = { row } />
           ))}
 
           {emptyRows > 0 && (
