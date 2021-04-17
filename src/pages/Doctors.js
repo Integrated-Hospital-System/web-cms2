@@ -176,6 +176,7 @@ export default function Doctors() {
             <TableCell align="left" className= { classes.header }>Email</TableCell>
             <TableCell align="left" className= { classes.header }>Name</TableCell>
             <TableCell align="left" className= { classes.header }>Specialty</TableCell>
+            <TableCell align="left" className= { classes.header }>Options </TableCell>
         </TableRow>
         </TableHead>
         <TableBody>

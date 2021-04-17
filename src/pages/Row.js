@@ -14,6 +14,8 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import { Button, Icon } from "@material-ui/core";
+import Delete, { DeleteIcon } from '@material-ui/icons/Delete';
 
 const useRowStyles = makeStyles({
   root: {
@@ -45,6 +47,11 @@ export default function Row(props) {
         </TableCell>
         <TableCell align="left">{row.name}</TableCell>
         <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
+        <TableCell align="left">
+          <Button variant="contained" color="primary" style= {{marginRight: 30}}>Edit</Button>
+          <Button variant="contained" color="secondary">Delete</Button>
+        </TableCell>
+
         </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
