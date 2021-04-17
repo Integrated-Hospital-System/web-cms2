@@ -19,16 +19,6 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(name, age, gender, comorbid) {
-  return { name, age, gender, comorbid };
-}
-
-const rows = [
-  createData('Mark', 25, "Male", "Mag" ),
-  createData('Jacob', 28, 'Male', 'Diabetes'),
-  createData('Larry', 30, "Female", "High blood"),
-];
-
 export default function Appointments() {
   const classes = useStyles();
   const history = useHistory();
@@ -39,6 +29,7 @@ export default function Appointments() {
         .then(res => res.json())
         .then(result => {
           let completedFalse = result.filter(result => result.isCompleted === false);
+          
           let patient = completedFalse.map(result => result.patient);
           setRows(patient);
         })
