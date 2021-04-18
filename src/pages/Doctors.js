@@ -119,14 +119,17 @@ export default function Doctors() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    axios({
-      method : 'GET',
-      url: '/accounts'
-    })
+    axios(
+      '/accounts/?role=Doctor', {
+        headers : {
+          access_token : localStorage.getItem('access_token')
+        }
+      }
+    )
       .then(accounts => {
         let result = accounts.data;
-        let dokter = result.filter(dok => dok.role === "doctor")
-        setRows(dokter);
+        
+        setRows(result);
       })
       .catch(err => {
         console.log(err);
@@ -219,6 +222,5 @@ export default function Doctors() {
       </Table>
     </TableContainer>
     </Container>
-    
   );
 }

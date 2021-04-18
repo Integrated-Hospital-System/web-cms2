@@ -43,6 +43,22 @@ export default function Navbar() {
   
   const classes = useStyles();
 
+  function showLogout () {
+    if (localStorage.access_token) {
+      return (
+        <Link to="/login">
+        <Button onClick = { logout } href="#" color="primary" variant="outlined" className={classes.link}>
+          Logout
+        </Button>
+      </Link>
+      )
+    }
+  }
+
+  function logout () {
+    localStorage.removeItem('access_token');
+  }
+
   return (
     <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
@@ -61,11 +77,7 @@ export default function Navbar() {
             <Link to="/appointments" className={classes.link}>
               Appointment
             </Link>
-            <Link to="/login">
-              <Button href="#" color="primary" variant="outlined" className={classes.link}>
-                Login
-              </Button>
-            </Link>
+            { showLogout() }
           </div>
       </Toolbar>
     </AppBar>

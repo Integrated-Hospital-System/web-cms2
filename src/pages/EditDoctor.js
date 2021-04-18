@@ -53,6 +53,9 @@ export default function EditDoctor() {
     axios({
       method : 'GET',
       url: '/accounts/' + params.id,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
     })
       .then(accountsAxio => {
         let accounts = accountsAxio.data;
@@ -100,7 +103,10 @@ export default function EditDoctor() {
     axios({
       method : 'PUT',
       url: '/accounts/' + params.id,
-      data : submitData
+      data : submitData,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
     })
       .then(accounts => {
         swal("Success edit doctor", "Doctor edited!", "success");

@@ -72,13 +72,16 @@ export default function AddDoctor() {
     event.preventDefault();
 
     let submitData = doctor;
-    submitData.speciality = submitData.speciality.split(',')
+    submitData.speciality = submitData.speciality.split(',');
     submitData.practice = rows;
-    submitData.role = 'doctor';
+    submitData.role = 'Doctor';
     axios({
       method : 'POST',
       url: '/accounts',
-      data : submitData
+      data : submitData,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
     })
       .then(accounts => {
         swal("Success add doctor", "Doctor added!", "success");

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Avatar, Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typography } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
+import axios from '../axios/axios';
 
 function Copyright() {
   return (
@@ -52,10 +53,40 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignInSide() {
   const classes = useStyles();
-  const history = useHistory()
+  const history = useHistory();
+  const [user, setUser] = useState({
+    email : '',
+    password : ''
+  })
+
 
   const login = () => {
     history.push('/')
+  }
+
+  function handleChange (event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    let newUser = { ...user, [name] : value };
+    setUser(newUser);
+  }
+
+  function handleSubmit (event) {
+    event.preventDefault();
+    axios({
+      method: 'POST',
+      url : '/login',
+      data : user
+    })
+      .then(response => {
+        localStorage.setItem('access_token', response.data.access_token);
+        login();
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   return (
@@ -70,7 +101,7 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} noValidate onSubmit = { handleSubmit }>
             <TextField
               variant="outlined"
               margin="normal"
@@ -79,6 +110,7 @@ export default function SignInSide() {
               id="email"
               label="Email Address"
               name="email"
+              onChange = { handleChange }
             />
             <TextField
               variant="outlined"
@@ -90,6 +122,7 @@ export default function SignInSide() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange = { handleChange }
             />
             <Button
               type="submit"
@@ -97,7 +130,6 @@ export default function SignInSide() {
               variant="contained"
               style={{backgroundColor: "#1de9b6"}}
               className={classes.submit}
-              onClick={() => login()}
             >
               Sign In
             </Button>

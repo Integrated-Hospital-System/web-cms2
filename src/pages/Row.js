@@ -40,9 +40,10 @@ export default function Row(props) {
   }
 
   function deleteDoctor (id) {
+    console.log(id);
     swal({
       title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this medicines!",
+      text: "Once deleted, you will not be able to recover this doctor!",
       icon: "warning",
       buttons: true,
       dangerMode: true,
@@ -51,10 +52,13 @@ export default function Row(props) {
       if (willDelete) {
         axios({
           method : 'DELETE',
-          url: '/accounts/' + id
+          url: '/accounts/' + id,
+          headers : {
+            access_token : localStorage.getItem('access_token')
+          }
         })
           .then(({ data }) => {
-            swal("Poof! Your medicines has been deleted!", {
+            swal("Poof! Your doctor has been deleted!", {
               icon: "success",
             });
             changeFilter(id);
@@ -63,7 +67,7 @@ export default function Row(props) {
             console.log(err);
           })
       } else {
-        swal("Your medicines is safe!");
+        swal("Your Doctor is safe!");
       }
     });
   }
@@ -90,8 +94,8 @@ export default function Row(props) {
         <TableCell align="left">{row.name}</TableCell>
         <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
         <TableCell align="left">
-          <Button variant="contained" color="primary" style= {{marginRight: 30}} onClick = { () => editDoctor(row.id) }>Edit</Button>
-          <Button variant="contained" color="secondary" onClick = { () => deleteDoctor(row.id) }>Delete</Button>
+          <Button variant="contained" color="primary" style= {{marginRight: 30}} onClick = { () => editDoctor(row._id) }>Edit</Button>
+          <Button variant="contained" color="secondary" onClick = { () => deleteDoctor(row._id) }>Delete</Button>
         </TableCell>
 
         </TableRow>
