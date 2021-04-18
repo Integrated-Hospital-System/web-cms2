@@ -19,6 +19,7 @@ import Delete, { DeleteIcon } from '@material-ui/icons/Delete';
 import swal from 'sweetalert';
 import axios from '../axios/axios';
 import { useHistory } from "react-router";
+import EditDoctor from "./EditDoctor";
 
 const useRowStyles = makeStyles({
   root: {
@@ -32,6 +33,7 @@ export default function Row(props) {
   const { row, filterIdDoctor } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
+  const history = useHistory();
 
   function changeFilter (id) {
     filterIdDoctor(id);
@@ -66,6 +68,10 @@ export default function Row(props) {
     });
   }
 
+  function editDoctor (id) {
+    history.push('editDoctor/' + id);
+  }
+
   return (
     <React.Fragment>
       <TableRow className={classes.root}>
@@ -84,7 +90,7 @@ export default function Row(props) {
         <TableCell align="left">{row.name}</TableCell>
         <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
         <TableCell align="left">
-          <Button variant="contained" color="primary" style= {{marginRight: 30}}>Edit</Button>
+          <Button variant="contained" color="primary" style= {{marginRight: 30}} onClick = { () => editDoctor(row.id) }>Edit</Button>
           <Button variant="contained" color="secondary" onClick = { () => deleteDoctor(row.id) }>Delete</Button>
         </TableCell>
 
