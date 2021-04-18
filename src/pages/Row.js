@@ -30,7 +30,7 @@ const useRowStyles = makeStyles({
 });
 
 export default function Row(props) {
-  const { row, filterIdDoctor } = props;
+  const { row, filterIdDoctor, asal } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
   const history = useHistory();
@@ -91,11 +91,16 @@ export default function Row(props) {
         <TableCell component="th" scope="row">
           {row.email}
         </TableCell>
-        <TableCell align="left">{row.name}</TableCell>
-        <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
+        <TableCell align="left">{row.name}</TableCell> 
+        {
+          row.role === 'Doctor' &&
+          <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
+        }
         <TableCell align="left">
           <Button variant="contained" color="primary" style= {{marginRight: 30}} onClick = { () => editDoctor(row._id) }>Edit</Button>
-          <Button variant="contained" color="secondary" onClick = { () => deleteDoctor(row._id) }>Delete</Button>
+          {
+            asal !== 'home' && <Button variant="contained" color="secondary" onClick = { () => deleteDoctor(row._id) }>Delete</Button>
+          }
         </TableCell>
 
         </TableRow>
@@ -115,7 +120,7 @@ export default function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.practice.map((historyRow) => (
+                  { row.role === 'Doctor' && row.practice.map((historyRow) => (
                     <TableRow key={historyRow.date}>
                       <TableCell component="th" scope="row">
                         {historyRow.day}

@@ -121,13 +121,17 @@ export default function Doctors() {
   useEffect(() => {
     axios({
       method : 'GET',
-      url : '/medicines'
+      url : '/medicines',
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
     })
       .then(medicinesRes => {
         let medicines = medicinesRes.data;
         setRows(medicines);
       })
       .catch(err => {
+        console.log('err: ', err.response);
         console.log(err);
       })     
   }, [])
@@ -222,7 +226,7 @@ export default function Doctors() {
               <TableCell align="left">{ row.description }</TableCell>
               <TableCell align="left">{ row.stock }</TableCell>
               <TableCell align="left">
-                <Button variant="contained" color="primary" style={{ marginRight: 30 }} onClick = { () => editMedicine(row.id) }>Edit</Button>
+                <Button variant="contained" color="primary" style={{ marginRight: 30 }} onClick = { () => editMedicine(row._id) }>Edit</Button>
                 <Button variant="contained" color="secondary" onClick = { () => deleteMedicine(row.id) } >Delete</Button>
               </TableCell>
 

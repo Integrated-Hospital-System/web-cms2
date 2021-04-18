@@ -4,6 +4,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
 import axios from '../axios/axios';
+import { useDispatch } from 'react-redux';
 
 function Copyright() {
   return (
@@ -58,10 +59,14 @@ export default function SignInSide() {
     email : '',
     password : ''
   })
-
+  const dispatch = useDispatch();
 
   const login = () => {
-    history.push('/')
+    history.push('/');
+  }
+
+  const loginAdmin = () => {
+    history.push('/doctors');
   }
 
   function handleChange (event) {
@@ -82,7 +87,12 @@ export default function SignInSide() {
     })
       .then(response => {
         localStorage.setItem('access_token', response.data.access_token);
-        login();
+        dispatch({ type : 'accounts/getAccount', payload: response.data.account });
+        if (response.data.account.role === 'Doctor') {
+          login();
+        } else {
+          loginAdmin();
+        }
       })
       .catch(err => {
         console.log(err);
