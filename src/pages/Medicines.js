@@ -131,7 +131,6 @@ export default function Doctors() {
         setRows(medicines);
       })
       .catch(err => {
-        console.log('err: ', err.response);
         console.log(err);
       })     
   }, [])
@@ -171,13 +170,16 @@ export default function Doctors() {
         if (willDelete) {
           axios({
             method : 'DELETE',
-            url: '/medicines/' + id
+            url: '/medicines/' + id,
+            headers : {
+              access_token : localStorage.getItem('access_token')
+            }
           })
             .then(({ data }) => {
               swal("Poof! Your medicines has been deleted!", {
                 icon: "success",
               });
-              let newRows = rows.filter(row => row.id !== id);
+              let newRows = rows.filter(row => row._id !== id);
               setRows(newRows);
             })
             .catch(err => {
@@ -227,7 +229,7 @@ export default function Doctors() {
               <TableCell align="left">{ row.stock }</TableCell>
               <TableCell align="left">
                 <Button variant="contained" color="primary" style={{ marginRight: 30 }} onClick = { () => editMedicine(row._id) }>Edit</Button>
-                <Button variant="contained" color="secondary" onClick = { () => deleteMedicine(row.id) } >Delete</Button>
+                <Button variant="contained" color="secondary" onClick = { () => deleteMedicine(row._id) } >Delete</Button>
               </TableCell>
 
             </TableRow>

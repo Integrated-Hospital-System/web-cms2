@@ -56,7 +56,7 @@ export default function Navbar() {
       }
     )
       .then(accounts => {
-        setRole(accounts.data.role)
+        setRole(accounts.data.role);
       })
       .catch(err => {
         console.log(err);
