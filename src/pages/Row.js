@@ -16,6 +16,9 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { Button, Icon } from "@material-ui/core";
 import Delete, { DeleteIcon } from '@material-ui/icons/Delete';
+import swal from 'sweetalert';
+import axios from '../axios/axios';
+import { useHistory } from "react-router";
 
 const useRowStyles = makeStyles({
   root: {
@@ -26,9 +29,42 @@ const useRowStyles = makeStyles({
 });
 
 export default function Row(props) {
-  const { row } = props;
+  const { row, filterIdDoctor } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
+
+  function changeFilter (id) {
+    filterIdDoctor(id);
+  }
+
+  function deleteDoctor (id) {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this medicines!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        axios({
+          method : 'DELETE',
+          url: '/accounts/' + id
+        })
+          .then(({ data }) => {
+            swal("Poof! Your medicines has been deleted!", {
+              icon: "success",
+            });
+            changeFilter(id);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      } else {
+        swal("Your medicines is safe!");
+      }
+    });
+  }
 
   return (
     <React.Fragment>
@@ -49,7 +85,7 @@ export default function Row(props) {
         <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
         <TableCell align="left">
           <Button variant="contained" color="primary" style= {{marginRight: 30}}>Edit</Button>
-          <Button variant="contained" color="secondary">Delete</Button>
+          <Button variant="contained" color="secondary" onClick = { () => deleteDoctor(row.id) }>Delete</Button>
         </TableCell>
 
         </TableRow>

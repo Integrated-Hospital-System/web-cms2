@@ -11,6 +11,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import swal from 'sweetalert';
+import axios from '../axios/axios';
+import { useHistory } from 'react-router';
 
 const UseStyles = makeStyles((theme) => ({
   root: {
@@ -29,19 +32,73 @@ const UseStyles = makeStyles((theme) => ({
 export default function AddDoctor() {
   const classes = UseStyles();
   const [rows, setRows] = useState([]);
-  const [practice, setPractice] = useState({
-    day: '',
-    start : new Date(),
-    end : new Date()
+  const [doctor, setDoctor] = useState({
+    name : '',
+    email : '',
+    password : '',
+    age : '',
+    gender : '',
+    speciality : '',
+    image_url : ''
   })
 
+  const [practice, setPractice] = useState({
+    day: '',
+    start : '',
+    end :  ''
+  })
+
+  const history = useHistory();
+
   function handleChange(event) {
-    console.log(event);
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    const newPractice = { ...practice, [name]: value }
+    setPractice(newPractice);
   }
 
-  function setStart (event) {
-    let newTime = { ...practice, start : event };
-    setPractice(newTime);
+  function handleDoctorChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    const newDoctor = { ...doctor, [name]: value }
+    setDoctor(newDoctor);
+  }
+
+  function submitDoctor (event) {
+    event.preventDefault();
+
+    let submitData = doctor;
+    submitData.speciality = submitData.speciality.split(',')
+    submitData.practice = rows;
+    submitData.role = 'doctor';
+    axios({
+      method : 'POST',
+      url: '/accounts',
+      data : submitData
+    })
+      .then(accounts => {
+        swal("Success add doctor", "Doctor added!", "success");
+        history.push('/doctors');
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  function addPractice (event) {
+    event.preventDefault();
+
+    let newRows = rows.concat(practice);
+    setRows(newRows);
+  }
+
+  function deletePractice (day, start, end) {
+    let newRows = rows.filter(row => row.day !== day || row.start !== start || row.end !== end);
+    setRows(newRows);
   }
 
   return (
@@ -50,7 +107,7 @@ export default function AddDoctor() {
         <Grid item xs={6}>
           <Container style={{width: "60%", border: "1"}}>
             <h3 style={{textAlign: "center"}}>Add Doctor</h3>
-            <form noValidate>
+            <form onSubmit = { submitDoctor }>
             <TextField
               variant="outlined"
               margin="normal"
@@ -59,15 +116,19 @@ export default function AddDoctor() {
               id="name"
               label="Name"
               name="name"
+              value = { doctor.name }
+              onChange = { handleDoctorChange }
             />
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
+              id="email"
+              label="Email"
+              name="email"
+              value = { doctor.email }
+              onChange = { handleDoctorChange }
             />
             <TextField
               variant="outlined"
@@ -79,6 +140,8 @@ export default function AddDoctor() {
               type="password"
               id="password"
               autoComplete="current-password"
+              value = { doctor.password }
+              onChange = { handleDoctorChange }
             />
             <TextField
               variant="outlined"
@@ -88,6 +151,8 @@ export default function AddDoctor() {
               id="age"
               label="Age"
               name="age"
+              value = { doctor.age }
+              onChange = { handleDoctorChange }
             />
             <TextField
               variant="outlined"
@@ -97,15 +162,20 @@ export default function AddDoctor() {
               id="gender"
               label="Gender"
               name="gender"
+              value = { doctor.gender }
+              onChange = { handleDoctorChange }
             />
             <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="specialty"
-            label="Specialty"
-            name="specialty"
+            id="speciality"
+            label="Speciality"
+            name="speciality"
+            value = { doctor.speciality }
+            onChange = { handleDoctorChange }
+            
           />
           <TextField
           variant="outlined"
@@ -115,6 +185,8 @@ export default function AddDoctor() {
           id="image_url"
           label="Image Url"
           name="image_url"
+          value = { doctor.image_url }
+          onChange = { handleDoctorChange }
         />
             <Button
               type="submit"
@@ -130,15 +202,16 @@ export default function AddDoctor() {
       <Grid item xs={ 6 }>
         <Container style={{width: "60%", border: "1"}}>
           <h3 style={{textAlign: "center"}}>Practice</h3>
-          <form noValidate>
+          <form noValidate onSubmit = { addPractice }>
 
           <InputLabel id="demo-simple-select-label">Day</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            onChange={handleChange}
+            onChange={ handleChange }
             value = { practice.day }
             name = "day"
+            
           >
             <MenuItem value={ 'Sunday' }>Sunday</MenuItem>
             <MenuItem value={ 'Monday' }>Monday</MenuItem>
@@ -150,19 +223,43 @@ export default function AddDoctor() {
 
           </Select>
           <br></br>
+          
+          <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="start"
+          type="time"
+          id="start"
+          value = { practice.start }
+          onChange = { handleChange }
+          
+        /> 
+          <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="end"
+          type="time"
+          id="end"
+          value = { practice.end }
+          onChange = { handleChange }
+          
+        /> 
+          
+        <br></br>
 
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <TimePicker value = { practice.start } onChange={ (newValue) => setStart(newValue) } name="start" label= "start" style={{marginTop : 20}} />
-            <TimePicker onChange={handleChange} name="end" label= "end" style={{marginTop : 20, marginBottom: 20}} />
-          </MuiPickersUtilsProvider>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            style={{backgroundColor: "#1de9b6"}}
-          >
-            Add Practice
-          </Button>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          style={{backgroundColor: "#1de9b6", marginBottom : 30 }}
+         
+        >
+          Add Practice
+        </Button>
         </form>        
         </Container>
         <br></br>
@@ -173,6 +270,7 @@ export default function AddDoctor() {
               <TableCell align="left" className= { classes.header }>Day</TableCell>
               <TableCell align="left" className= { classes.header }>Start</TableCell>
               <TableCell align="left" className= { classes.header }>End</TableCell>
+              <TableCell align="left" className= { classes.header }>Options</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -181,6 +279,7 @@ export default function AddDoctor() {
                 <TableCell component="th" scope="row"> { row.day } </TableCell>
                 <TableCell align="left">{ row.start }</TableCell>
                 <TableCell align="left">{ row.end }</TableCell>
+                <Button variant="contained" color="secondary" style = {{color: "black"}} onClick = { () => deletePractice(row.day, row.start, row.end) }>Delete</Button>
               </TableRow>
             ))}
           </TableBody>

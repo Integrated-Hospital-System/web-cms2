@@ -156,6 +156,11 @@ export default function Doctors() {
     setFilter(event.target.value);
   }
 
+  function filterIdDoctor (id) {
+    let newRows = rows.filter(row => row.id !== id);
+    setRows(newRows);
+  }
+
   return (
     <Container>
     <h3> List of all doctors </h3>
@@ -184,7 +189,7 @@ export default function Doctors() {
             ? rowsToShow.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rowsToShow
           ).map((row, index) => (
-            <Row key = { index } row = { row } />
+            <Row key = { index } row = { row } filterIdDoctor = { filterIdDoctor } />
           ))}
 
           {emptyRows > 0 && (
