@@ -40,7 +40,6 @@ export default function Row(props) {
   }
 
   function deleteDoctor (id) {
-    console.log(id);
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this doctor!",

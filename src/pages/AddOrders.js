@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { 
   Container, 
   Grid, 
@@ -13,6 +13,8 @@ import {
   Button,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useParams } from 'react-router';
+import axios from '../axios/axios';
 
 const UseStyles = makeStyles((theme) => ({
   root: {
@@ -35,17 +37,47 @@ const rows = [
 ];
 
 
-export default function addOrders() {
+export default function AddOrders() {
   const classes = UseStyles();
+  const params = useParams();
+  const [patient, setPatient] = useState({
+    name : '',
+    age : '',
+    gender : '',
+    comorbid : []
+  })
+  
+  useEffect(() => {
+    axios({
+      method : 'GET',
+      url: '/accounts/607bee4c420e6652fa137194',
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
+    })
+      .then(patient => {
+        console.log(patient.data);
+        let newPatient = {
+          name : patient.data.name,
+          age : patient.data.age,
+          gender : patient.data.gender,
+          comorbid : patient.data.comorbid
+        }
+        setPatient(newPatient);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }, [params.id])
 
   return (
     <Container className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={6} >
-          <h2>Name : Budi</h2>
-          <h2>Age : 30 y.o</h2>
-          <h2>Gender : Male</h2>
-          <h2>Comorbid: Gerd, Headache</h2>
+          <h2>Name : { patient.name }</h2>
+          <h2>Age : { patient.age } y.o</h2>
+          <h2>Gender : {patient.gender }</h2>
+          <h2>Comorbid: { patient.comorbid.join(', ') }</h2>
         </Grid>
         <Grid item xs={6} >
           <Container style={{width: "60%", border: "1"}}>

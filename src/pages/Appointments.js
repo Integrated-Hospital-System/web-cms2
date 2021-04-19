@@ -45,8 +45,8 @@ export default function Appointments() {
       })
   }, [])
 
-  const addOrders = () => {
-    history.push('/addOrders')
+  const addOrders = (id) => {
+    history.push('/addOrders/' + id);
   }
 
   return (
@@ -74,7 +74,7 @@ export default function Appointments() {
               <TableCell align="left">{ row.gender }</TableCell>
               <TableCell align="left">{ row.comorbid }</TableCell>
               <TableCell align="left"> 
-                <Button variant="contained" style={{backgroundColor: "#1de9b6"}} onClick={() => addOrders()}>
+                <Button variant="contained" style={{backgroundColor: "#1de9b6"}} onClick={ () => addOrders(row._id) }>
                 Process
                 </Button> </TableCell>
             </TableRow>
