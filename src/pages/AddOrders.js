@@ -48,12 +48,12 @@ export default function AddOrders() {
     comorbid : []
   });
 
+  const [rows, setRows] = useState([]);
+
   const [formAddOrders, setFormAddOrders] = useState({
-    medicine : '',
-    timesperday : '',
+    timesPerDay : '',
     doses : '',
-    totalMedicines : '',
-    disease : ''
+    totalMedicine : '',
   });
 
   const [medicines, setMedicines] = useState([]);
@@ -89,7 +89,7 @@ export default function AddOrders() {
       comorbid : patient.data.comorbid
     }
     setPatient(newPatient);
-  }
+  };
 
   const getMedicines = async () => {
     const medicines =  await axios({
@@ -116,12 +116,16 @@ export default function AddOrders() {
       medicineId : event._id,
       name : event.name
     }
-    console.log(object);
     setSelectMedicine(object);
   }
 
   function handleChange (event) {
-    console.log(event.target.value);
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    let newForm = {...formAddOrders, [name] : value };
+    setFormAddOrders(newForm);
   }
 
   return (
@@ -154,7 +158,8 @@ export default function AddOrders() {
                 fullWidth
                 id="timesperday"
                 label="Times per Day"
-                name="timesperday"
+                name="timesPerDay"
+                onChange = { (e) => handleChange(e) }
               />
               <TextField
                 variant="outlined"
@@ -164,23 +169,25 @@ export default function AddOrders() {
                 id="doses"
                 label="Doses"
                 name="doses"
+                onChange = { (e) => handleChange(e) }
               />
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                id="total"
+                id="totalMedicine"
                 label="Total Medicines"
-                name="total"
+                name="totalMedicine"
+                onChange = { (e) => handleChange(e) }
               />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                style={{backgroundColor: "#1de9b6"}}
+                color = "primary"
               >
-                Submit
+                Add Medicines
               </Button>
             </form>
           </Container>

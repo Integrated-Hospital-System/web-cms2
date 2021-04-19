@@ -35,7 +35,6 @@ export default function EditDoctor() {
   const [doctor, setDoctor] = useState({
     name : '',
     email : '',
-    password : '',
     speciality : '',
     image_url : ''
   })
