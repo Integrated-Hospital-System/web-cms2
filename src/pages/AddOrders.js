@@ -13,9 +13,10 @@ import {
   Button,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import axios from '../axios/axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import swal from 'sweetalert';
 
 const UseStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +42,8 @@ const rows = [
 export default function AddOrders() {
   const classes = UseStyles();
   const params = useParams();
+  const history = useHistory();
+
   const [patient, setPatient] = useState({
     name : '',
     age : '',
@@ -62,6 +65,8 @@ export default function AddOrders() {
     medicineId : '',
     name : ''
   });
+
+  const [disease, setDisease] = useState([]);
 
   const getPatientId = async () => {
     const patient = await axios({
@@ -148,6 +153,40 @@ export default function AddOrders() {
     setRows(newRow);
   }
 
+  function handleDiseaseChange (event) {
+    event.preventDefault();
+
+    let newDisease = event.target.value;
+    setDisease(newDisease);
+  }
+
+  function postOrders (object) {
+    axios({
+      method : 'POST',
+      url: '/orders/' + params.id,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
+    })
+      .then(res => {
+        swal("Success Create orders", "Orders added!", "success");
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  function submitForm (event) {
+    event.preventDefault();
+
+    let newOrders = {
+      medicines : rows,
+      disease : disease.split(',')
+    }
+    console.log(newOrders);
+    postOrders(newOrders);
+  }
+
   return (
     <Container className={classes.root}>
       <Grid container spacing={3}>
@@ -156,7 +195,25 @@ export default function AddOrders() {
             <h3>Age : { patient.age } y.o</h3>
             <h3>Gender : {patient.gender }</h3>
             <h3>Comorbid: { patient.comorbid.join(', ') }</h3>
-
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="disease"
+              label="Disease"
+              name="disease"
+              onChange = { (e) => handleDiseaseChange(e) }
+            />
+            <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            style={{backgroundColor: "#1de9b6"}}
+            onClick = { e => submitForm(e) }
+          >
+            Submit
+          </Button>
           </Grid>
        
         <Grid item xs={8} >
