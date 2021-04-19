@@ -58,6 +58,11 @@ export default function AddOrders() {
 
   const [medicines, setMedicines] = useState([]);
 
+  const [selectMedicine, setSelectMedicine] = useState({
+    medicineId : '',
+    name : ''
+  });
+
   const getPatientId = async () => {
     const patient = await axios({
       method : 'GET',
@@ -106,6 +111,15 @@ export default function AddOrders() {
     }
   }, [params.id]);
 
+  function medicineChange (event) {
+    let object = {
+      medicineId : event._id,
+      name : event.name
+    }
+    console.log(object);
+    setSelectMedicine(object);
+  }
+
   function handleChange (event) {
     console.log(event.target.value);
   }
@@ -125,17 +139,14 @@ export default function AddOrders() {
           <Container style={{width: "60%", border: "1"}}>
             <h3 style={{textAlign: "center"}}>Add Orders</h3>
             <form noValidate>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                disabled
-                fullWidth
-                id="medicine"
-                label="Medicine"
-                name="medicine"
-                onChange = { (event) => handleChange(event)}
-              />
+            <Autocomplete
+            id="combo-box-demo"
+            options={ medicines }
+            getOptionLabel={ (option) => option.name }
+            style={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Medicines" variant="outlined" />}
+            onChange = { (event, newValue) => { medicineChange(newValue)} }
+            />
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -163,15 +174,6 @@ export default function AddOrders() {
                 label="Total Medicines"
                 name="total"
               />
-              <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="note"
-              label="Notes"
-              name="notes"
-            />
               <Button
                 type="submit"
                 fullWidth
