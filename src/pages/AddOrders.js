@@ -45,41 +45,71 @@ export default function AddOrders() {
     age : '',
     gender : '',
     comorbid : []
-  })
-  
-  useEffect(() => {
-    axios({
+  });
+
+  const [formAddOrders, setFormAddOrders] = useState({
+    medicine : '',
+    timesperday : '',
+    doses : '',
+    totalMedicines : '',
+    disease : ''
+  });
+
+  const [medicines, setMedicines] = useState([]);
+
+  const getPatient = async () => {
+    const patient = await axios({
       method : 'GET',
       url: '/accounts/607bee4c420e6652fa137194',
       headers : {
         access_token : localStorage.getItem('access_token')
       }
     })
-      .then(patient => {
-        console.log(patient.data);
-        let newPatient = {
-          name : patient.data.name,
-          age : patient.data.age,
-          gender : patient.data.gender,
-          comorbid : patient.data.comorbid
-        }
-        setPatient(newPatient);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }, [params.id])
+    const newPatient = {
+      name : patient.data.name,
+      age : patient.data.age,
+      gender : patient.data.gender,
+      comorbid : patient.data.comorbid
+    }
+    setPatient(newPatient);
+  };
+
+  const getMedicines = async () => {
+    const medicines =  await axios({
+      method : 'GET',
+      url : '/medicines',
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
+    })
+    setMedicines(medicines.data);
+  };
+
+  useEffect(() => {
+    try {
+      getPatient();
+      getMedicines();
+    } catch (err) {
+      console.log(err);
+    }
+  }, [params.id]);
+
+  function handleChange (event) {
+    console.log(event.target.value);
+  }
 
   return (
     <Container className={classes.root}>
       <Grid container spacing={3}>
-        <Grid item xs={6} >
-          <h2>Name : { patient.name }</h2>
-          <h2>Age : { patient.age } y.o</h2>
-          <h2>Gender : {patient.gender }</h2>
-          <h2>Comorbid: { patient.comorbid.join(', ') }</h2>
-        </Grid>
-        <Grid item xs={6} >
+          <Grid item xs={4} >
+            <h3>Name : { patient.name }</h3>
+            <h3>Age : { patient.age } y.o</h3>
+            <h3>Gender : {patient.gender }</h3>
+            <h3>Comorbid: { patient.comorbid.join(', ') }</h3>
+
+          </Grid>
+       
+        <Grid item xs={8} >
           <Container style={{width: "60%", border: "1"}}>
             <h3 style={{textAlign: "center"}}>Add Orders</h3>
             <form noValidate>
@@ -87,10 +117,12 @@ export default function AddOrders() {
                 variant="outlined"
                 margin="normal"
                 required
+                disabled
                 fullWidth
                 id="medicine"
                 label="Medicine"
                 name="medicine"
+                onChange = { (event) => handleChange(event)}
               />
               <TextField
                 variant="outlined"
