@@ -143,6 +143,11 @@ export default function AddOrders() {
     setRows(object);
   }
 
+  function deleteMedic (indexList) {
+    let newRow = rows.filter((row,index) => index !== indexList);
+    setRows(newRow);
+  }
+
   return (
     <Container className={classes.root}>
       <Grid container spacing={3}>
@@ -227,7 +232,7 @@ export default function AddOrders() {
                     <TableCell align="left">{ row.timesPerDay }</TableCell>
                     <TableCell align="left">{ row.doses }</TableCell>
                     <TableCell align="left">{ row.totalMedicine }</TableCell>
-                    <Button variant="contained" color = "secondary" >Delete</Button>
+                    <Button variant="contained" color = "secondary" onClick = { () => deleteMedic(index) }>Delete</Button>
                   </TableRow>
                 ))}
               </TableBody>
