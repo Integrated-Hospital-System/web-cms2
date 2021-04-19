@@ -45,22 +45,26 @@ export default function Navbar() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [role, setRole] = useState('');
+  const accountStore = useSelector(state => state.accountStore);
 
   useEffect(() => {
-    axios(
-      {
-        url : 'accounts/index',
-        headers : {
-          access_token : localStorage.getItem('access_token')
+
+      axios(
+        {
+          url : 'accounts/index',
+          headers : {
+            access_token : localStorage.getItem('access_token')
+          }
         }
-      }
-    )
-      .then(accounts => {
-        setRole(accounts.data.role);
-      })
-      .catch(err => {
-        console.log(err);
-      })
+      )
+        .then(accounts => {
+          // dispatch({ type : 'accounts/getAccount', payload : accounts.data })
+          setRole(accounts.data.role);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    
   }, [])
 
   function showLogout () {

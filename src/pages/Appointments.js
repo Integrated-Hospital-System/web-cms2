@@ -35,8 +35,9 @@ export default function Appointments() {
     })
       .then(result => {
         result = result.data;
-        let completedFalse = result.filter(result => result.isCompleted === false);          
-        setRows(completedFalse);
+        let completedFalse = result.filter(result => result.isCompleted === false); 
+        let recentAppointment = completedFalse.filter(appointment => appointment.appointmentDate > new Date().toISOString());         
+        setRows(recentAppointment);
       })
       .catch (err => {
         console.log(err);
@@ -60,6 +61,7 @@ export default function Appointments() {
             <TableCell align="left" className= { classes.header }>Age</TableCell>
             <TableCell align="left" className= { classes.header }>Gender</TableCell>
             <TableCell align="left" className= { classes.header }>Comorbid</TableCell>
+            <TableCell align="left" className= { classes.header }>Appointment Date</TableCell>
             <TableCell align="left" className= { classes.header }></TableCell>
           </TableRow>
         </TableHead>
@@ -71,6 +73,7 @@ export default function Appointments() {
               <TableCell align="left">{ row.patient.age }</TableCell>
               <TableCell align="left">{ row.patient.gender }</TableCell>
               <TableCell align="left">{ row.patient.comorbid }</TableCell>
+              <TableCell align="left">{ row.appointmentDate.substring(0, 10) }</TableCell>
               <TableCell align="left"> 
                 <Button variant="contained" style={{backgroundColor: "#1de9b6"}} onClick={ () => addOrders(row._id) }>
                 Process

@@ -62,7 +62,7 @@ export default function SignInSide() {
   const dispatch = useDispatch();
 
   const login = () => {
-    history.push('/');
+    history.push('/appointments');
   }
 
   const loginAdmin = () => {

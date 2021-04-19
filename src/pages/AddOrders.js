@@ -166,7 +166,8 @@ export default function AddOrders() {
       url: '/orders/' + params.id,
       headers : {
         access_token : localStorage.getItem('access_token')
-      }
+      },
+      data : object
     })
       .then(res => {
         swal("Success Create orders", "Orders added!", "success");
@@ -181,7 +182,7 @@ export default function AddOrders() {
 
     let newOrders = {
       medicines : rows,
-      disease : disease.split(',')
+      diseases : disease.split(',')
     }
     console.log(newOrders);
     postOrders(newOrders);

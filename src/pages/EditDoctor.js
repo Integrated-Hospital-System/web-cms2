@@ -29,7 +29,7 @@ const UseStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EditDoctor() {
+export default function EditDoctor(props) {
   const classes = UseStyles();
   const [rows, setRows] = useState([]);
   const [doctor, setDoctor] = useState({
@@ -38,6 +38,8 @@ export default function EditDoctor() {
     speciality : '',
     image_url : ''
   })
+
+  const { pageAfterEdit } = props;
 
   const [practice, setPractice] = useState({
     day: '',
@@ -98,7 +100,6 @@ export default function EditDoctor() {
     submitData.speciality = submitData.speciality.split(',')
     submitData.practice = rows;
     submitData.role = 'Doctor';
-
     axios({
       method : 'PUT',
       url: '/accounts/' + params.id,
@@ -109,7 +110,11 @@ export default function EditDoctor() {
     })
       .then(accounts => {
         swal("Success edit doctor", "Doctor edited!", "success");
-        history.push('/doctors');
+        if (pageAfterEdit === 'doctors') {
+          history.push('/doctors');
+        } else {
+          history.push('/');
+        }
       })
       .catch(err => {
         console.log(err);
