@@ -160,7 +160,7 @@ export default function Doctors() {
   }
 
   function filterIdDoctor (id) {
-    let newRows = rows.filter(row => row.id !== id);
+    let newRows = rows.filter(row => row._id !== id);
     setRows(newRows);
   }
 

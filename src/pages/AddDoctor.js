@@ -142,8 +142,8 @@ export default function AddDoctor() {
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
               value = { doctor.password }
+              autoComplete="current-password"
               onChange = { handleDoctorChange }
             />
             <TextField

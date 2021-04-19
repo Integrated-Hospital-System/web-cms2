@@ -62,7 +62,6 @@ export default function EditDoctor() {
         let getAccount = {
           name : accounts.name,
           email : accounts.email,
-          password : accounts.password,
           speciality : accounts.speciality.join(', '),
           image_url : accounts.image_url
         }
@@ -99,7 +98,8 @@ export default function EditDoctor() {
     let submitData = doctor;
     submitData.speciality = submitData.speciality.split(',')
     submitData.practice = rows;
-    submitData.role = 'doctor';
+    submitData.role = 'Doctor';
+
     axios({
       method : 'PUT',
       url: '/accounts/' + params.id,
@@ -159,19 +159,6 @@ export default function EditDoctor() {
               onChange = { handleDoctorChange }
             />
             <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value = { doctor.password }
-              onChange = { handleDoctorChange }
-            />
-            <TextField
             variant="outlined"
             margin="normal"
             required
@@ -193,7 +180,7 @@ export default function EditDoctor() {
           name="image_url"
           value = { doctor.image_url }
           onChange = { handleDoctorChange }
-        />
+          />
             <Button
               type="submit"
               fullWidth
