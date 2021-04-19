@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { 
   Container, 
   Grid, 
@@ -13,6 +13,10 @@ import {
   Button,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { useHistory, useParams } from 'react-router';
+import axios from '../axios/axios';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import swal from 'sweetalert';
 
 const UseStyles = makeStyles((theme) => ({
   root: {
@@ -35,31 +39,195 @@ const rows = [
 ];
 
 
-export default function addOrders() {
+export default function AddOrders() {
   const classes = UseStyles();
+  const params = useParams();
+  const history = useHistory();
+
+  const [patient, setPatient] = useState({
+    name : '',
+    age : '',
+    gender : '',
+    comorbid : []
+  });
+
+  const [rows, setRows] = useState([]);
+
+  const [formAddOrders, setFormAddOrders] = useState({
+    timesPerDay : '',
+    doses : '',
+    totalMedicine : '',
+  });
+
+  const [medicines, setMedicines] = useState([]);
+
+  const [selectMedicine, setSelectMedicine] = useState({
+    medicineId : '',
+    name : ''
+  });
+
+  const [disease, setDisease] = useState([]);
+
+  const getPatientId = async () => {
+    const patient = await axios({
+      method : 'GET',
+      url: '/appointments/' + params.id,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
+    })
+    getPatient(patient.data.patient);
+  };
+
+  const getPatient = async (id) => {
+    const patient = await axios({
+      method : 'GET',
+      url: '/accounts/' + id,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
+    })
+    const newPatient = {
+      name : patient.data.name,
+      age : patient.data.age,
+      gender : patient.data.gender,
+      comorbid : patient.data.comorbid
+    }
+    setPatient(newPatient);
+  };
+
+  const getMedicines = async () => {
+    const medicines =  await axios({
+      method : 'GET',
+      url : '/medicines',
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
+    })
+    setMedicines(medicines.data);
+  };
+
+  useEffect(() => {
+    try {
+      getPatientId();
+      getMedicines();
+    } catch (err) {
+      console.log(err);
+    }
+  }, [params.id]);
+
+  function medicineChange (event) {
+    let object = {
+      medicineId : event._id,
+      name : event.name
+    }
+    setSelectMedicine(object);
+  }
+
+  function handleChange (event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    let newForm = {...formAddOrders, [name] : value };
+    setFormAddOrders(newForm);
+  }
+
+  function handleAddMedic (event) {
+    event.preventDefault();
+
+    let newMedicList = {
+      medicineId : selectMedicine.medicineId,
+      name : selectMedicine.name,
+      timesPerDay : formAddOrders.timesPerDay,
+      doses : formAddOrders.doses,
+      totalMedicine : formAddOrders.totalMedicine
+    }
+
+    let object = rows.concat(newMedicList);
+    setRows(object);
+  }
+
+  function deleteMedic (indexList) {
+    let newRow = rows.filter((row,index) => index !== indexList);
+    setRows(newRow);
+  }
+
+  function handleDiseaseChange (event) {
+    event.preventDefault();
+
+    let newDisease = event.target.value;
+    setDisease(newDisease);
+  }
+
+  function postOrders (object) {
+    axios({
+      method : 'POST',
+      url: '/orders/' + params.id,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
+    })
+      .then(res => {
+        swal("Success Create orders", "Orders added!", "success");
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  function submitForm (event) {
+    event.preventDefault();
+
+    let newOrders = {
+      medicines : rows,
+      disease : disease.split(',')
+    }
+    console.log(newOrders);
+    postOrders(newOrders);
+  }
 
   return (
     <Container className={classes.root}>
       <Grid container spacing={3}>
-        <Grid item xs={6} >
-          <h2>Name : Budi</h2>
-          <h2>Age : 30 y.o</h2>
-          <h2>Gender : Male</h2>
-          <h2>Comorbid: Gerd, Headache</h2>
-        </Grid>
-        <Grid item xs={6} >
+          <Grid item xs={4} >
+            <h3>Name : { patient.name }</h3>
+            <h3>Age : { patient.age } y.o</h3>
+            <h3>Gender : {patient.gender }</h3>
+            <h3>Comorbid: { patient.comorbid.join(', ') }</h3>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="disease"
+              label="Disease"
+              name="disease"
+              onChange = { (e) => handleDiseaseChange(e) }
+            />
+            <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            style={{backgroundColor: "#1de9b6"}}
+            onClick = { e => submitForm(e) }
+          >
+            Submit
+          </Button>
+          </Grid>
+       
+        <Grid item xs={8} >
           <Container style={{width: "60%", border: "1"}}>
             <h3 style={{textAlign: "center"}}>Add Orders</h3>
-            <form noValidate>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="medicine"
-                label="Medicine"
-                name="medicine"
-              />
+            <form noValidate  onSubmit = { (e) => handleAddMedic(e) }>
+            <Autocomplete
+            id="combo-box-demo"
+            options={ medicines }
+            getOptionLabel={ (option) => option.name }
+            style={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Medicines" variant="outlined" />}
+            onChange = { (event, newValue) => { medicineChange(newValue)} }
+            />
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -67,7 +235,8 @@ export default function addOrders() {
                 fullWidth
                 id="timesperday"
                 label="Times per Day"
-                name="timesperday"
+                name="timesPerDay"
+                onChange = { (e) => handleChange(e) }
               />
               <TextField
                 variant="outlined"
@@ -77,32 +246,25 @@ export default function addOrders() {
                 id="doses"
                 label="Doses"
                 name="doses"
+                onChange = { (e) => handleChange(e) }
               />
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                id="total"
+                id="totalMedicine"
                 label="Total Medicines"
-                name="total"
+                name="totalMedicine"
+                onChange = { (e) => handleChange(e) }
               />
-              <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="note"
-              label="Notes"
-              name="notes"
-            />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                style={{backgroundColor: "#1de9b6"}}
+                color = "primary"
               >
-                Submit
+                Add Medicines
               </Button>
             </form>
           </Container>
@@ -116,16 +278,18 @@ export default function addOrders() {
                   <TableCell align="left">Times per Day</TableCell>
                   <TableCell align="left">Doses</TableCell>
                   <TableCell align="left">Total Medicines</TableCell>
+                  <TableCell align="left">Options</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {rows.map((row, index) => (
                   <TableRow key={ row.name }>
                     <TableCell align="center"> { index + 1 } </TableCell>
-                    <TableCell component="th" scope="row"> { row.medicine } </TableCell>
-                    <TableCell align="left">{ row.timesperday }</TableCell>
+                    <TableCell component="th" scope="row"> { row.name } </TableCell>
+                    <TableCell align="left">{ row.timesPerDay }</TableCell>
                     <TableCell align="left">{ row.doses }</TableCell>
-                    <TableCell align="left">{ row.total }</TableCell>
+                    <TableCell align="left">{ row.totalMedicine }</TableCell>
+                    <Button variant="contained" color = "secondary" onClick = { () => deleteMedic(index) }>Delete</Button>
                   </TableRow>
                 ))}
               </TableBody>

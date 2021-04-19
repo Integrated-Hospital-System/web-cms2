@@ -35,18 +35,16 @@ export default function Appointments() {
     })
       .then(result => {
         result = result.data;
-        let completedFalse = result.filter(result => result.isCompleted === false);
-          
-        let patient = completedFalse.map(result => result.patient);
-        setRows(patient);
+        let completedFalse = result.filter(result => result.isCompleted === false);          
+        setRows(completedFalse);
       })
       .catch (err => {
         console.log(err);
       })
   }, [])
 
-  const addOrders = () => {
-    history.push('/addOrders')
+  const addOrders = (id) => {
+    history.push('/addOrders/' + id);
   }
 
   return (
@@ -69,12 +67,12 @@ export default function Appointments() {
           {rows.map((row, index) => (
             <TableRow key={ row.id }>
               <TableCell align="center"> { index + 1 } </TableCell>
-              <TableCell component="th" scope="row"> { row.name } </TableCell>
-              <TableCell align="left">{ row.age }</TableCell>
-              <TableCell align="left">{ row.gender }</TableCell>
-              <TableCell align="left">{ row.comorbid }</TableCell>
+              <TableCell component="th" scope="row"> { row.patient.name } </TableCell>
+              <TableCell align="left">{ row.patient.age }</TableCell>
+              <TableCell align="left">{ row.patient.gender }</TableCell>
+              <TableCell align="left">{ row.patient.comorbid }</TableCell>
               <TableCell align="left"> 
-                <Button variant="contained" style={{backgroundColor: "#1de9b6"}} onClick={() => addOrders()}>
+                <Button variant="contained" style={{backgroundColor: "#1de9b6"}} onClick={ () => addOrders(row._id) }>
                 Process
                 </Button> </TableCell>
             </TableRow>
