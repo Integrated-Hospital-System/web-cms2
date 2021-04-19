@@ -100,26 +100,25 @@ export default function EditDoctor(props) {
     submitData.speciality = submitData.speciality.split(',')
     submitData.practice = rows;
     submitData.role = 'Doctor';
-    console.log(submitData);
-    // axios({
-    //   method : 'PUT',
-    //   url: '/accounts/' + params.id,
-    //   data : submitData,
-    //   headers : {
-    //     access_token : localStorage.getItem('access_token')
-    //   }
-    // })
-    //   .then(accounts => {
-    //     swal("Success edit doctor", "Doctor edited!", "success");
-    //     if (pageAfterEdit === 'doctors') {
-    //       history.push('/doctors');
-    //     } else {
-    //       history.push('/');
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   })
+    axios({
+      method : 'PUT',
+      url: '/accounts/' + params.id,
+      data : submitData,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
+    })
+      .then(accounts => {
+        swal("Success edit doctor", "Doctor edited!", "success");
+        if (pageAfterEdit === 'doctors') {
+          history.push('/doctors');
+        } else {
+          history.push('/');
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   function addPractice (event) {
