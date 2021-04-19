@@ -16,6 +16,10 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { Button, Icon } from "@material-ui/core";
 import Delete, { DeleteIcon } from '@material-ui/icons/Delete';
+import swal from 'sweetalert';
+import axios from '../axios/axios';
+import { useHistory } from "react-router";
+import EditDoctor from "./EditDoctor";
 
 const useRowStyles = makeStyles({
   root: {
@@ -26,9 +30,51 @@ const useRowStyles = makeStyles({
 });
 
 export default function Row(props) {
-  const { row } = props;
+  const { row, filterIdDoctor, asal } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
+  const history = useHistory();
+
+  function changeFilter (id) {
+    filterIdDoctor(id);
+  }
+
+  function deleteDoctor (id) {
+    console.log(id);
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this doctor!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        axios({
+          method : 'DELETE',
+          url: '/accounts/' + id,
+          headers : {
+            access_token : localStorage.getItem('access_token')
+          }
+        })
+          .then(({ data }) => {
+            swal("Poof! Your doctor has been deleted!", {
+              icon: "success",
+            });
+            changeFilter(id);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      } else {
+        swal("Your Doctor is safe!");
+      }
+    });
+  }
+
+  function editDoctor (id) {
+    history.push('editDoctor/' + id);
+  }
 
   return (
     <React.Fragment>
@@ -45,11 +91,16 @@ export default function Row(props) {
         <TableCell component="th" scope="row">
           {row.email}
         </TableCell>
-        <TableCell align="left">{row.name}</TableCell>
-        <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
+        <TableCell align="left">{row.name}</TableCell> 
+        {
+          row.role === 'Doctor' &&
+          <TableCell align="left">{ row.speciality.join(', ') }</TableCell>
+        }
         <TableCell align="left">
-          <Button variant="contained" color="primary" style= {{marginRight: 30}}>Edit</Button>
-          <Button variant="contained" color="secondary">Delete</Button>
+          <Button variant="contained" color="primary" style= {{marginRight: 30}} onClick = { () => editDoctor(row._id) }>Edit</Button>
+          {
+            asal !== 'home' && <Button variant="contained" color="secondary" onClick = { () => deleteDoctor(row._id) }>Delete</Button>
+          }
         </TableCell>
 
         </TableRow>
@@ -69,7 +120,7 @@ export default function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.practice.map((historyRow) => (
+                  { row.role === 'Doctor' && row.practice.map((historyRow) => (
                     <TableRow key={historyRow.date}>
                       <TableCell component="th" scope="row">
                         {historyRow.day}

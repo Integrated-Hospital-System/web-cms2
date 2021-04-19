@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link } from "react-router-dom";
-
+import { useDispatch, useSelector } from 'react-redux';
+import axios from '../axios/axios';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -42,6 +43,64 @@ const useStyles = makeStyles((theme) => ({
 export default function Navbar() {
   
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+    axios(
+      {
+        url : 'accounts/index',
+        headers : {
+          access_token : localStorage.getItem('access_token')
+        }
+      }
+    )
+      .then(accounts => {
+        setRole(accounts.data.role);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }, [])
+
+  function showLogout () {
+    if (localStorage.access_token) {
+      return (
+        <Link to="/login">
+        <Button onClick = { logout } href="#" color="primary" variant="outlined" className={classes.link}>
+          Logout
+        </Button>
+      </Link>
+      )
+    } else {
+      return (
+        <Link to="/login">
+        <Button onClick = { logout } href="#" color="primary" variant="outlined" className={classes.link}>
+          Login
+        </Button>
+      </Link>
+      )
+    }
+  }
+
+  function showListDoctor () {
+    if (role === 'Doctor') {
+      return (
+        <>
+        </>
+      )
+    } else {
+      return  (
+        <Link to="/doctors" className={classes.link}>
+          List Doctors
+        </Link>
+      )
+    }
+  }
+
+  function logout () {
+    localStorage.removeItem('access_token');
+  }
 
   return (
     <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
@@ -52,20 +111,14 @@ export default function Navbar() {
           </Link>
         </Typography>
           <div>
-            <Link to="/doctors" className={classes.link}>
-              List Doctors
-            </Link>
+            { showListDoctor() }         
             <Link to="/medicines" className={classes.link}>
               List Medicines
             </Link>
             <Link to="/appointments" className={classes.link}>
               Appointment
             </Link>
-            <Link to="/login">
-              <Button href="#" color="primary" variant="outlined" className={classes.link}>
-                Login
-              </Button>
-            </Link>
+            { showLogout() }
           </div>
       </Toolbar>
     </AppBar>

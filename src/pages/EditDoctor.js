@@ -13,7 +13,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import swal from 'sweetalert';
 import axios from '../axios/axios';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 
 const UseStyles = makeStyles((theme) => ({
   root: {
@@ -29,15 +29,13 @@ const UseStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddDoctor() {
+export default function EditDoctor() {
   const classes = UseStyles();
   const [rows, setRows] = useState([]);
   const [doctor, setDoctor] = useState({
     name : '',
     email : '',
     password : '',
-    age : '',
-    gender : '',
     speciality : '',
     image_url : ''
   })
@@ -49,6 +47,32 @@ export default function AddDoctor() {
   })
 
   const history = useHistory();
+  const params = useParams();
+
+  useEffect(() => {
+    axios({
+      method : 'GET',
+      url: '/accounts/' + params.id,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
+    })
+      .then(accountsAxio => {
+        let accounts = accountsAxio.data;
+        let getAccount = {
+          name : accounts.name,
+          email : accounts.email,
+          speciality : accounts.speciality.join(', '),
+          image_url : accounts.image_url
+        }
+        setDoctor(getAccount);
+        setRows(accounts.practice);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }, [params.id])
+
 
   function handleChange(event) {
     const target = event.target;
@@ -72,19 +96,20 @@ export default function AddDoctor() {
     event.preventDefault();
 
     let submitData = doctor;
-    submitData.speciality = submitData.speciality.split(',');
+    submitData.speciality = submitData.speciality.split(',')
     submitData.practice = rows;
     submitData.role = 'Doctor';
+
     axios({
-      method : 'POST',
-      url: '/accounts',
+      method : 'PUT',
+      url: '/accounts/' + params.id,
       data : submitData,
       headers : {
         access_token : localStorage.getItem('access_token')
       }
     })
       .then(accounts => {
-        swal("Success add doctor", "Doctor added!", "success");
+        swal("Success edit doctor", "Doctor edited!", "success");
         history.push('/doctors');
       })
       .catch(err => {
@@ -99,8 +124,8 @@ export default function AddDoctor() {
     setRows(newRows);
   }
 
-  function deletePractice (day, start, end) {
-    let newRows = rows.filter(row => row.day !== day || row.start !== start || row.end !== end);
+  function deletePractice (index) {
+    let newRows = rows.filter((row, indexRow) => indexRow !== index);
     setRows(newRows);
   }
 
@@ -109,7 +134,7 @@ export default function AddDoctor() {
       <Grid container spacing={3}>
         <Grid item xs={6}>
           <Container style={{width: "60%", border: "1"}}>
-            <h3 style={{textAlign: "center"}}>Add Doctor</h3>
+            <h3 style={{textAlign: "center"}}>Edit Doctor</h3>
             <form onSubmit = { submitDoctor }>
             <TextField
               variant="outlined"
@@ -134,41 +159,6 @@ export default function AddDoctor() {
               onChange = { handleDoctorChange }
             />
             <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              value = { doctor.password }
-              autoComplete="current-password"
-              onChange = { handleDoctorChange }
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="age"
-              label="Age"
-              name="age"
-              value = { doctor.age }
-              onChange = { handleDoctorChange }
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="gender"
-              label="Gender"
-              name="gender"
-              value = { doctor.gender }
-              onChange = { handleDoctorChange }
-            />
-            <TextField
             variant="outlined"
             margin="normal"
             required
@@ -190,7 +180,7 @@ export default function AddDoctor() {
           name="image_url"
           value = { doctor.image_url }
           onChange = { handleDoctorChange }
-        />
+          />
             <Button
               type="submit"
               fullWidth
@@ -282,7 +272,7 @@ export default function AddDoctor() {
                 <TableCell component="th" scope="row"> { row.day } </TableCell>
                 <TableCell align="left">{ row.start }</TableCell>
                 <TableCell align="left">{ row.end }</TableCell>
-                <Button variant="contained" color="secondary" style = {{color: "black"}} onClick = { () => deletePractice(row.day, row.start, row.end) }>Delete</Button>
+                <Button variant="contained" color="secondary" style = {{color: "black"}} onClick = { () => deletePractice(index) }>Delete</Button>
               </TableRow>
             ))}
           </TableBody>

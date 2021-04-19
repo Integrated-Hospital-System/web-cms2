@@ -15,9 +15,13 @@ export default function EditMedicine() {
   const history = useHistory();
 
   useEffect(() => {
+    console.log('masuk');
     axios({
       method: 'GET',
-      url : 'http://localhost:3001/medicines/' + params.id
+      url : 'http://localhost:3000/medicines/' + params.id,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
     })
       .then(resultAxios => {
         let result = resultAxios.data;
@@ -27,6 +31,9 @@ export default function EditMedicine() {
           stock : result.stock
         }
         setMedicine(getMedicine);
+      })
+      .catch(err => {
+        console.log(err);
       })
   }, [])
 
@@ -46,7 +53,10 @@ export default function EditMedicine() {
     axios({
       method : 'PUT',
       url: '/medicines/' + params.id,
-      data : medicine
+      data : medicine,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
     })
       .then(accounts => {
         swal("Success edit medicine", "Medicine edited!", "success");

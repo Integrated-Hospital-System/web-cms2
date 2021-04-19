@@ -28,7 +28,10 @@ export default function Appointments() {
   useEffect(() => {
     axios({
       method: 'GET',
-      url : '/appointments'
+      url : '/appointments',
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
     })
       .then(result => {
         result = result.data;

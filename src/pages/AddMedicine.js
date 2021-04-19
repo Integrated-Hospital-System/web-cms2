@@ -25,7 +25,10 @@ export default function AddMedicine() {
     axios({
       method : 'POST',
       url: '/medicines',
-      data : medicine
+      data : medicine,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
     })
       .then(accounts => {
         swal("Success add medicine", "Medicine added!", "success");

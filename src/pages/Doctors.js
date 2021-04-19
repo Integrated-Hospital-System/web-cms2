@@ -119,14 +119,17 @@ export default function Doctors() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    axios({
-      method : 'GET',
-      url: '/accounts'
-    })
+    axios(
+      '/accounts/?role=Doctor', {
+        headers : {
+          access_token : localStorage.getItem('access_token')
+        }
+      }
+    )
       .then(accounts => {
         let result = accounts.data;
-        let dokter = result.filter(dok => dok.role === "doctor")
-        setRows(dokter);
+        
+        setRows(result);
       })
       .catch(err => {
         console.log(err);
@@ -154,6 +157,11 @@ export default function Doctors() {
 
   function searchDoctor (event) {
     setFilter(event.target.value);
+  }
+
+  function filterIdDoctor (id) {
+    let newRows = rows.filter(row => row._id !== id);
+    setRows(newRows);
   }
 
   return (
@@ -184,7 +192,7 @@ export default function Doctors() {
             ? rowsToShow.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rowsToShow
           ).map((row, index) => (
-            <Row key = { index } row = { row } />
+            <Row key = { index } row = { row } filterIdDoctor = { filterIdDoctor } />
           ))}
 
           {emptyRows > 0 && (
@@ -214,6 +222,5 @@ export default function Doctors() {
       </Table>
     </TableContainer>
     </Container>
-    
   );
 }

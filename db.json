@@ -106,6 +106,56 @@
       "comorbid": [
         "diabetes"
       ]
+    },
+    {
+      "name": "Krisna Kris",
+      "email": "krisna.post@gmail.com",
+      "password": "1234",
+      "speciality": [
+        "Orthopedy",
+        "   tht"
+      ],
+      "image_url": "google.com",
+      "practice": [
+        {
+          "day": "Monday",
+          "start": "15:00",
+          "end": "16:00"
+        },
+        {
+          "day": "Tuesday",
+          "start": "15:00",
+          "end": "16:00"
+        }
+      ],
+      "role": "doctor",
+      "id": "hVoZTcq"
+    },
+    {
+      "name": "Krisna",
+      "email": "krisna.post@gmail.com",
+      "password": "12345",
+      "age": "23",
+      "gender": "Male",
+      "speciality": [
+        "Orthopedy",
+        " tht"
+      ],
+      "image_url": "google.com",
+      "practice": [
+        {
+          "day": "Monday",
+          "start": "15:45",
+          "end": "16:44"
+        },
+        {
+          "day": "Tuesday",
+          "start": "15:45",
+          "end": "16:44"
+        }
+      ],
+      "role": "doctor",
+      "id": "kpVboO5"
     }
   ],
   "medicines": [
