@@ -128,6 +128,21 @@ export default function AddOrders() {
     setFormAddOrders(newForm);
   }
 
+  function handleAddMedic (event) {
+    event.preventDefault();
+
+    let newMedicList = {
+      medicineId : selectMedicine.medicineId,
+      name : selectMedicine.name,
+      timesPerDay : formAddOrders.timesPerDay,
+      doses : formAddOrders.doses,
+      totalMedicine : formAddOrders.totalMedicine
+    }
+
+    let object = rows.concat(newMedicList);
+    setRows(object);
+  }
+
   return (
     <Container className={classes.root}>
       <Grid container spacing={3}>
@@ -142,7 +157,7 @@ export default function AddOrders() {
         <Grid item xs={8} >
           <Container style={{width: "60%", border: "1"}}>
             <h3 style={{textAlign: "center"}}>Add Orders</h3>
-            <form noValidate>
+            <form noValidate  onSubmit = { (e) => handleAddMedic(e) }>
             <Autocomplete
             id="combo-box-demo"
             options={ medicines }
@@ -201,16 +216,18 @@ export default function AddOrders() {
                   <TableCell align="left">Times per Day</TableCell>
                   <TableCell align="left">Doses</TableCell>
                   <TableCell align="left">Total Medicines</TableCell>
+                  <TableCell align="left">Options</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {rows.map((row, index) => (
                   <TableRow key={ row.name }>
                     <TableCell align="center"> { index + 1 } </TableCell>
-                    <TableCell component="th" scope="row"> { row.medicine } </TableCell>
-                    <TableCell align="left">{ row.timesperday }</TableCell>
+                    <TableCell component="th" scope="row"> { row.name } </TableCell>
+                    <TableCell align="left">{ row.timesPerDay }</TableCell>
                     <TableCell align="left">{ row.doses }</TableCell>
-                    <TableCell align="left">{ row.total }</TableCell>
+                    <TableCell align="left">{ row.totalMedicine }</TableCell>
+                    <Button variant="contained" color = "secondary" >Delete</Button>
                   </TableRow>
                 ))}
               </TableBody>
