@@ -4,6 +4,10 @@ import Navbar from './components/Navbar'
 import { Login, Home, Doctors, Medicines, AddDoctor, AddMedicine, Appointments, AddOrders, EditMedicine } from './pages'
 import EditDoctor from './pages/EditDoctor';
 import { GuardProvider, GuardedRoute } from 'react-router-guards';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import axios from './axios/axios';
+import { useState } from 'react';
 
 const requireLogin = (to, from, next) => {
   if (to.meta.auth) {
@@ -16,7 +20,40 @@ const requireLogin = (to, from, next) => {
   }
 }
 
+const requireAdmin = (to, from, next) => {
+  if (to.meta.role === 'Admin') {
+    next();
+  } else {
+    next.redirect('/');
+  }
+}
+
 function App() {
+  const dispatch = useDispatch();
+  const accountStorage = useSelector(state => state.accountStorage);
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+    if (accountStorage !== undefined) {
+      setRole(accountStorage.role);
+    } else {
+      axios(
+        {
+          url : 'accounts/index',
+          headers : {
+            access_token : localStorage.getItem('access_token')
+          }
+        }
+      )
+        .then(accounts => {
+          dispatch({ type : 'accounts/getAccount', payload : accounts.data })
+          setRole(accounts.data.role);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    }
+  }, [])
 
   const LoginContainer = () => (
     <div className="container">
@@ -37,7 +74,9 @@ function App() {
       <GuardedRoute path="/addDoctor" meta={{ auth : true }} component={AddDoctor} />
       <GuardedRoute path="/editDoctor/:id" meta={{ auth : true }} component={EditDoctor} />
       <GuardedRoute path="/medicines" meta={{ auth : true }} component={Medicines} />
-      <GuardedRoute path="/doctors" meta={{ auth : true }} component={Doctors} />
+      <GuardProvider guards = { [requireAdmin] }>
+        <GuardedRoute path="/doctors" meta={{ auth : true, role }} component={Doctors} />
+      </GuardProvider>
     </div>
     </div>
  )
