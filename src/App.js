@@ -3,13 +3,25 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-d
 import Navbar from './components/Navbar'
 import { Login, Home, Doctors, Medicines, AddDoctor, AddMedicine, Appointments, AddOrders, EditMedicine } from './pages'
 import EditDoctor from './pages/EditDoctor';
+import { GuardProvider, GuardedRoute } from 'react-router-guards';
+
+const requireLogin = (to, from, next) => {
+  if (to.meta.auth) {
+    if (localStorage.getItem('access_token')) {
+      next();
+    }
+    next.redirect('/login');
+  } else {
+    next();
+  }
+}
 
 function App() {
 
   const LoginContainer = () => (
     <div className="container">
-      <Route exact path="/" render={() => <Redirect to="/login" />} />
-      <Route path="/login" component={Login} />
+      <Route exact path="/" render={ () => <Redirect to="/login" /> } />
+      <Route path="/login" component={ Login } />
     </div>
   )
 
@@ -17,29 +29,29 @@ function App() {
     <div>
     <div className="container">
       <Navbar />
-      <Route exact path="/" component={Home} />
-      <Route path="/addOrders/:id" component={AddOrders} />
-      <Route path="/appointments" component={Appointments} />
-      <Route path="/addMedicine" component={AddMedicine} />
-      <Route path="/editMedicine/:id" component={EditMedicine} />
-      <Route path="/addDoctor" component={AddDoctor} />
-      <Route path="/editDoctor/:id" component={EditDoctor} />
-      <Route path="/medicines" component={Medicines} />
-      <Route path="/doctors" component={Doctors} />
+      <GuardedRoute exact path="/" meta={{ auth : true }} component={Home} />
+      <GuardedRoute path="/addOrders/:id" meta={{ auth : true }} component={AddOrders} />
+      <GuardedRoute path="/appointments" meta={{ auth : true }} component={Appointments} />
+      <GuardedRoute path="/addMedicine" meta={{ auth : true }} component={AddMedicine} />
+      <GuardedRoute path="/editMedicine/:id" meta={{ auth : true }} component={EditMedicine} />
+      <GuardedRoute path="/addDoctor" meta={{ auth : true }} component={AddDoctor} />
+      <GuardedRoute path="/editDoctor/:id" meta={{ auth : true }} component={EditDoctor} />
+      <GuardedRoute path="/medicines" meta={{ auth : true }} component={Medicines} />
+      <GuardedRoute path="/doctors" meta={{ auth : true }} component={Doctors} />
     </div>
     </div>
  )
 
   return (
     <div className="App">
-      <Router>       
-          <div>
-            <Switch>                
-              <Route exact path="/(login)" component={LoginContainer}/>
-              <Route component={DefaultContainer}/>
-            </Switch>
-          </div>
-        </Router>
+      <Router>
+        <GuardProvider guards = { [requireLogin] }>      
+          <Switch>                
+            <Route exact path="/(login)" component={LoginContainer}/>
+            <Route component={DefaultContainer}/>
+          </Switch>
+        </GuardProvider> 
+      </Router>
     </div>
   );
 }
