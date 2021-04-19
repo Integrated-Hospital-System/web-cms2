@@ -15,6 +15,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import { useParams } from 'react-router';
 import axios from '../axios/axios';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const UseStyles = makeStyles((theme) => ({
   root: {
@@ -57,10 +58,21 @@ export default function AddOrders() {
 
   const [medicines, setMedicines] = useState([]);
 
-  const getPatient = async () => {
+  const getPatientId = async () => {
     const patient = await axios({
       method : 'GET',
-      url: '/accounts/607bee4c420e6652fa137194',
+      url: '/appointments/' + params.id,
+      headers : {
+        access_token : localStorage.getItem('access_token')
+      }
+    })
+    getPatient(patient.data.patient);
+  };
+
+  const getPatient = async (id) => {
+    const patient = await axios({
+      method : 'GET',
+      url: '/accounts/' + id,
       headers : {
         access_token : localStorage.getItem('access_token')
       }
@@ -72,7 +84,7 @@ export default function AddOrders() {
       comorbid : patient.data.comorbid
     }
     setPatient(newPatient);
-  };
+  }
 
   const getMedicines = async () => {
     const medicines =  await axios({
@@ -87,7 +99,7 @@ export default function AddOrders() {
 
   useEffect(() => {
     try {
-      getPatient();
+      getPatientId();
       getMedicines();
     } catch (err) {
       console.log(err);
