@@ -82,7 +82,6 @@ function App() {
       <GuardProvider guards = { [requireAdmin] }>
         <GuardedRoute path="/doctors" meta={{ auth : true, role : role }} component={Doctors} />
       </GuardProvider>
-      <GuardedRoute path="*" component={ NotFound }></GuardedRoute>
     </div>
     </div>
  )
