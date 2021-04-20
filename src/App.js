@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import axios from './axios/axios';
 import { useState } from 'react';
+import NotFound from './pages/NotFound';
 
 const requireLogin = (to, from, next) => {
   if (to.meta.auth) {
@@ -81,6 +82,7 @@ function App() {
       <GuardProvider guards = { [requireAdmin] }>
         <GuardedRoute path="/doctors" meta={{ auth : true, role : role }} component={Doctors} />
       </GuardProvider>
+      <GuardedRoute path="*" component={ NotFound }></GuardedRoute>
     </div>
     </div>
  )
@@ -88,7 +90,7 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <GuardProvider guards = { [requireLogin] }>      
+        <GuardProvider guards = { [requireLogin] } error = { NotFound }>      
           <Switch>                
             <Route exact path="/(login)" component={LoginContainer}/>
             <Route component={DefaultContainer}/>
