@@ -79,9 +79,11 @@ function App() {
       <GuardedRoute path="/addDoctor" meta={{ auth : true }} component={AddDoctor} />
       <GuardedRoute path="/editDoctor/:id" meta={{ auth : true }} component={EditDoctor} />
       <GuardedRoute path="/medicines" meta={{ auth : true }} component={Medicines} />
+
       <GuardProvider guards = { [requireAdmin] }>
         <GuardedRoute path="/doctors" meta={{ auth : true, role : role }} component={Doctors} />
       </GuardProvider>
+      
     </div>
     </div>
  )
@@ -93,6 +95,7 @@ function App() {
           <Switch>                
             <Route exact path="/(login)" component={LoginContainer}/>
             <Route component={DefaultContainer}/>
+
           </Switch>
         </GuardProvider> 
       </Router>
