@@ -41,6 +41,8 @@ export default function AddOrders() {
     comorbid : []
   });
 
+  const [alert, setAlert] = useState(false);
+
   const [rows, setRows] = useState([]);
 
   const [formAddOrders, setFormAddOrders] = useState({
@@ -109,7 +111,8 @@ export default function AddOrders() {
   function medicineChange (event) {
     let object = {
       medicineId : event._id,
-      name : event.name
+      name : event.name,
+      stock : event.stock
     }
     setSelectMedicine(object);
   }
@@ -126,16 +129,24 @@ export default function AddOrders() {
   function handleAddMedic (event) {
     event.preventDefault();
 
-    let newMedicList = {
-      medicineId : selectMedicine.medicineId,
-      name : selectMedicine.name,
-      timesPerDay : formAddOrders.timesPerDay,
-      doses : formAddOrders.doses,
-      totalMedicine : formAddOrders.totalMedicine
+    if (selectMedicine.stock >= formAddOrders.totalMedicine) {
+      setAlert(false);
+      let newMedicList = {
+        medicineId : selectMedicine.medicineId,
+        name : selectMedicine.name,
+        timesPerDay : formAddOrders.timesPerDay,
+        doses : formAddOrders.doses,
+        totalMedicine : formAddOrders.totalMedicine
+      }
+  
+      let object = rows.concat(newMedicList);
+      setRows(object);
     }
-
-    let object = rows.concat(newMedicList);
-    setRows(object);
+    else {
+      setAlert(true);
+      let newForm = {...formAddOrders, totalMedicine : selectMedicine.stock };
+      setFormAddOrders(newForm);
+    }
   }
 
   function deleteMedic (indexList) {
@@ -239,6 +250,13 @@ export default function AddOrders() {
                 name="doses"
                 onChange = { (e) => handleChange(e) }
               />
+             {
+               alert &&
+               <div class="alert">
+                  <span class="closebtn" onClick = { () => setAlert(false) } >&times;</span>
+                  Not enough medicine stock
+                </div>
+             }
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -247,6 +265,11 @@ export default function AddOrders() {
                 id="totalMedicine"
                 label="Total Medicines"
                 name="totalMedicine"
+                type = "number"
+                value = { formAddOrders.totalMedicine }
+                inputProps = {{
+                  min : 0, max : selectMedicine.stock 
+                }}
                 onChange = { (e) => handleChange(e) }
               />
               <Button
