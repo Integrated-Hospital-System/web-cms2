@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom'
 import axios from '../axios/axios';
 import { useDispatch, useSelector } from 'react-redux';
 import swal from 'sweetalert';
+import { asyncGetAccount } from '../store/action';
 
 function Copyright() {
   return (
@@ -51,8 +52,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 export default function SignInSide() {
   const classes = useStyles();
   const history = useHistory();
@@ -60,8 +59,8 @@ export default function SignInSide() {
     email : '',
     password : ''
   })
+  const accountStorage = useSelector(state => state.accountStore);
   const dispatch = useDispatch();
-  const accountStorage = useSelector(state => state.accountStorage);
 
   const login = () => {
     history.push('/appointments');
@@ -80,28 +79,20 @@ export default function SignInSide() {
     setUser(newUser);
   }
 
-  function handleSubmit (event) {
+  async function handleSubmit (event) {
     event.preventDefault();
 
-    axios({
-      method: 'POST',
-      url : '/login',
-      data : user
-    })
-      .then(response => {
-        swal("Success!", `Welcome to MaMed CMS ${response.data.account.name}!`, "success");
-        localStorage.setItem('access_token', response.data.access_token);
-        dispatch({ type : 'accounts/getAccount', payload: response.data.account });
-        if (response.data.account.role === 'Doctor') {
-          login();
-        } else {
-          loginAdmin();
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
-    
+    let test = await dispatch(asyncGetAccount(user));
+    if (test) {
+      swal("Success!", `Welcome to MaMed CMS ${test.account.name}!`, "success");
+      localStorage.setItem('access_token', test.access_token);
+      if (test.role === 'Doctor') {
+        login();
+      } else {
+        loginAdmin();
+      }
+    }
+
   }
 
   return (
