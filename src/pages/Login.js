@@ -82,27 +82,24 @@ export default function SignInSide() {
   function handleSubmit (event) {
     event.preventDefault();
 
-    if (accountStorage !== undefined) {
-
-    } else {
-      axios({
-        method: 'POST',
-        url : '/login',
-        data : user
+    axios({
+      method: 'POST',
+      url : '/login',
+      data : user
+    })
+      .then(response => {
+        localStorage.setItem('access_token', response.data.access_token);
+        dispatch({ type : 'accounts/getAccount', payload: response.data.account });
+        if (response.data.account.role === 'Doctor') {
+          login();
+        } else {
+          loginAdmin();
+        }
       })
-        .then(response => {
-          localStorage.setItem('access_token', response.data.access_token);
-          dispatch({ type : 'accounts/getAccount', payload: response.data.account });
-          if (response.data.account.role === 'Doctor') {
-            login();
-          } else {
-            loginAdmin();
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        })
-    }
+      .catch(err => {
+        console.log(err);
+      })
+    
   }
 
   return (
