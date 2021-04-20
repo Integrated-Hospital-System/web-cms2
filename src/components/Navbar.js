@@ -104,6 +104,7 @@ export default function Navbar() {
 
   function logout () {
     localStorage.removeItem('access_token');
+    dispatch({ type : 'accounts/deleteAccount', payload : {}});
   }
 
   return (

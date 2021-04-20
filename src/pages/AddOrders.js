@@ -184,7 +184,7 @@ export default function AddOrders() {
 
     let newOrders = {
       medicines : rows,
-      diseases : disease.split(',')
+      diseases : disease.split(';')
     }
     postOrders(newOrders);
   }
@@ -203,7 +203,7 @@ export default function AddOrders() {
               required
               fullWidth
               id="disease"
-              label="Disease"
+              label="Separate disease by ; (example: flu;alergy)"
               name="disease"
               onChange = { (e) => handleDiseaseChange(e) }
             />
@@ -220,8 +220,8 @@ export default function AddOrders() {
        
         <Grid item xs={8} >
           <Container style={{width: "60%", border: "1"}}>
-            <h3 style={{textAlign: "center"}}>Add Orders</h3>
-            <form noValidate  onSubmit = { (e) => handleAddMedic(e) }>
+            <h3 style={{textAlign: "center"}}>List of Medicines</h3>
+            <form onSubmit = { (e) => handleAddMedic(e) }>
             <Autocomplete
             id="combo-box-demo"
             options={ medicines }
@@ -268,7 +268,7 @@ export default function AddOrders() {
                 type = "number"
                 value = { formAddOrders.totalMedicine }
                 inputProps = {{
-                  min : 0, max : selectMedicine.stock 
+                  min : 0
                 }}
                 onChange = { (e) => handleChange(e) }
               />

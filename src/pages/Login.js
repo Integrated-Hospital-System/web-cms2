@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
 import axios from '../axios/axios';
 import { useDispatch, useSelector } from 'react-redux';
+import swal from 'sweetalert';
 
 function Copyright() {
   return (
@@ -88,6 +89,7 @@ export default function SignInSide() {
       data : user
     })
       .then(response => {
+        swal("Success!", `Welcome to MaMed CMS ${response.data.account.name}!`, "success");
         localStorage.setItem('access_token', response.data.access_token);
         dispatch({ type : 'accounts/getAccount', payload: response.data.account });
         if (response.data.account.role === 'Doctor') {
@@ -114,7 +116,7 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate onSubmit = { handleSubmit }>
+          <form className={classes.form} onSubmit = { handleSubmit }>
             <TextField
               variant="outlined"
               margin="normal"
@@ -123,6 +125,7 @@ export default function SignInSide() {
               id="email"
               label="Email Address"
               name="email"
+              type="email"
               onChange = { handleChange }
             />
             <TextField
