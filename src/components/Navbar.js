@@ -49,22 +49,22 @@ export default function Navbar() {
 
   useEffect(() => {
 
-      axios(
-        {
-          url : 'accounts/index',
-          headers : {
-            access_token : localStorage.getItem('access_token')
-          }
-        }
-      )
-        .then(accounts => {
-          // dispatch({ type : 'accounts/getAccount', payload : accounts.data })
-          setRole(accounts.data.role);
-        })
-        .catch(err => {
-          console.log(err);
-        })
-    
+      // axios(
+      //   {
+      //     url : 'accounts/index',
+      //     headers : {
+      //       access_token : localStorage.getItem('access_token')
+      //     }
+      //   }
+      // )
+      //   .then(accounts => {
+      //     // dispatch({ type : 'accounts/getAccount', payload : accounts.data })
+      //     setRole(accounts.data.role);
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   })
+    setRole(accountStore.role);
   }, [])
 
   function showLogout () {

@@ -4,7 +4,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
 import axios from '../axios/axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Copyright() {
   return (
@@ -60,6 +60,7 @@ export default function SignInSide() {
     password : ''
   })
   const dispatch = useDispatch();
+  const accountStorage = useSelector(state => state.accountStorage);
 
   const login = () => {
     history.push('/appointments');
@@ -80,23 +81,28 @@ export default function SignInSide() {
 
   function handleSubmit (event) {
     event.preventDefault();
-    axios({
-      method: 'POST',
-      url : '/login',
-      data : user
-    })
-      .then(response => {
-        localStorage.setItem('access_token', response.data.access_token);
-        dispatch({ type : 'accounts/getAccount', payload: response.data.account });
-        if (response.data.account.role === 'Doctor') {
-          login();
-        } else {
-          loginAdmin();
-        }
+
+    if (accountStorage !== undefined) {
+
+    } else {
+      axios({
+        method: 'POST',
+        url : '/login',
+        data : user
       })
-      .catch(err => {
-        console.log(err);
-      })
+        .then(response => {
+          localStorage.setItem('access_token', response.data.access_token);
+          dispatch({ type : 'accounts/getAccount', payload: response.data.account });
+          if (response.data.account.role === 'Doctor') {
+            login();
+          } else {
+            loginAdmin();
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    }
   }
 
   return (

@@ -29,16 +29,6 @@ const UseStyles = makeStyles((theme) => ({
   },
 }));
 
-function createData(medicine, timesperday, doses, total) {
-  return { medicine, timesperday, doses, total };
-}
-
-const rows = [
-  createData('Panadol', "2", "1", "10"),
-  createData('Rhinos', "2", "2", "15"),
-];
-
-
 export default function AddOrders() {
   const classes = UseStyles();
   const params = useParams();
@@ -171,6 +161,7 @@ export default function AddOrders() {
     })
       .then(res => {
         swal("Success Create orders", "Orders added!", "success");
+        history.push('/appointments');
       })
       .catch(err => {
         console.log(err);
@@ -184,7 +175,6 @@ export default function AddOrders() {
       medicines : rows,
       diseases : disease.split(',')
     }
-    console.log(newOrders);
     postOrders(newOrders);
   }
 
