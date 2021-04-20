@@ -15,7 +15,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import { useHistory, useParams } from 'react-router';
 import axios from '../axios/axios';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import swal from 'sweetalert';
 
 const UseStyles = makeStyles((theme) => ({
@@ -189,6 +189,10 @@ export default function AddOrders() {
     postOrders(newOrders);
   }
 
+  const filterOptions = createFilterOptions({
+    limit: 10
+  });
+
   return (
     <Container className={classes.root}>
       <Grid container spacing={3}>
@@ -225,6 +229,7 @@ export default function AddOrders() {
             <Autocomplete
             id="combo-box-demo"
             options={ medicines }
+            filterOptions = { filterOptions }
             getOptionLabel={ (option) => option.name }
             style={{ width: 300 }}
             renderInput={(params) => <TextField {...params} label="Medicines" variant="outlined" />}
