@@ -10,6 +10,8 @@ export default function reducer (state = initialState, action) {
   switch (type) {
     case 'accounts/getAccount' :
       return { ...state, accountStore : payload }
+    case 'accounts/deleteAccount' :
+      return { ...state, accountStore : payload }
     default : 
       return state;
   }

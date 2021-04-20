@@ -15,7 +15,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import { useHistory, useParams } from 'react-router';
 import axios from '../axios/axios';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import swal from 'sweetalert';
 
 const UseStyles = makeStyles((theme) => ({
@@ -40,6 +40,8 @@ export default function AddOrders() {
     gender : '',
     comorbid : []
   });
+
+  const [alert, setAlert] = useState(false);
 
   const [rows, setRows] = useState([]);
 
@@ -109,7 +111,8 @@ export default function AddOrders() {
   function medicineChange (event) {
     let object = {
       medicineId : event._id,
-      name : event.name
+      name : event.name,
+      stock : event.stock
     }
     setSelectMedicine(object);
   }
@@ -126,16 +129,24 @@ export default function AddOrders() {
   function handleAddMedic (event) {
     event.preventDefault();
 
-    let newMedicList = {
-      medicineId : selectMedicine.medicineId,
-      name : selectMedicine.name,
-      timesPerDay : formAddOrders.timesPerDay,
-      doses : formAddOrders.doses,
-      totalMedicine : formAddOrders.totalMedicine
+    if (selectMedicine.stock >= formAddOrders.totalMedicine) {
+      setAlert(false);
+      let newMedicList = {
+        medicineId : selectMedicine.medicineId,
+        name : selectMedicine.name,
+        timesPerDay : formAddOrders.timesPerDay,
+        doses : formAddOrders.doses,
+        totalMedicine : formAddOrders.totalMedicine
+      }
+  
+      let object = rows.concat(newMedicList);
+      setRows(object);
     }
-
-    let object = rows.concat(newMedicList);
-    setRows(object);
+    else {
+      setAlert(true);
+      let newForm = {...formAddOrders, totalMedicine : selectMedicine.stock };
+      setFormAddOrders(newForm);
+    }
   }
 
   function deleteMedic (indexList) {
@@ -173,10 +184,14 @@ export default function AddOrders() {
 
     let newOrders = {
       medicines : rows,
-      diseases : disease.split(',')
+      diseases : disease.split(';')
     }
     postOrders(newOrders);
   }
+
+  const filterOptions = createFilterOptions({
+    limit: 10
+  });
 
   return (
     <Container className={classes.root}>
@@ -192,7 +207,7 @@ export default function AddOrders() {
               required
               fullWidth
               id="disease"
-              label="Disease"
+              label="Separate disease by ; (example: flu;alergy)"
               name="disease"
               onChange = { (e) => handleDiseaseChange(e) }
             />
@@ -209,11 +224,12 @@ export default function AddOrders() {
        
         <Grid item xs={8} >
           <Container style={{width: "60%", border: "1"}}>
-            <h3 style={{textAlign: "center"}}>Add Orders</h3>
-            <form noValidate  onSubmit = { (e) => handleAddMedic(e) }>
+            <h3 style={{textAlign: "center"}}>List of Medicines</h3>
+            <form onSubmit = { (e) => handleAddMedic(e) }>
             <Autocomplete
             id="combo-box-demo"
             options={ medicines }
+            filterOptions = { filterOptions }
             getOptionLabel={ (option) => option.name }
             style={{ width: 300 }}
             renderInput={(params) => <TextField {...params} label="Medicines" variant="outlined" />}
@@ -239,6 +255,13 @@ export default function AddOrders() {
                 name="doses"
                 onChange = { (e) => handleChange(e) }
               />
+             {
+               alert &&
+               <div class="alert">
+                  <span class="closebtn" onClick = { () => setAlert(false) } >&times;</span>
+                  Not enough medicine stock
+                </div>
+             }
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -247,6 +270,11 @@ export default function AddOrders() {
                 id="totalMedicine"
                 label="Total Medicines"
                 name="totalMedicine"
+                type = "number"
+                value = { formAddOrders.totalMedicine }
+                inputProps = {{
+                  min : 0
+                }}
                 onChange = { (e) => handleChange(e) }
               />
               <Button
