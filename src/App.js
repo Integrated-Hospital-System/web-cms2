@@ -31,7 +31,7 @@ const requireAdmin = (to, from, next) => {
 
 function App() {
   const dispatch = useDispatch();
-  const accountStorage = useSelector(state => state.accountStorage);
+  // const accountStorage = useSelector(state => state.accountStore);
   const [role, setRole] = useState('');
 
   function getCurrentUser () {
@@ -53,11 +53,13 @@ function App() {
   }
 
   useEffect(() => {
-    if (accountStorage !== undefined) {
-      setRole(accountStorage.role);
-    } else {
-      getCurrentUser();
-    }
+    // if (accountStorage !== undefined) {
+    //   console.log(1);
+    //   setRole(accountStorage.role);
+    // } else {
+    //   console.log(2);
+    // }
+    getCurrentUser();
   }, [])
 
   const LoginContainer = () => (

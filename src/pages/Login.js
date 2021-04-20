@@ -86,9 +86,9 @@ export default function SignInSide() {
     if (test) {
       swal("Success!", `Welcome to MaMed CMS ${test.account.name}!`, "success");
       localStorage.setItem('access_token', test.access_token);
-      if (test.role === 'Doctor') {
+      if (test.account.role === 'Doctor') {
         login();
-      } else {
+      } else if (test.account.role === 'Admin') {
         loginAdmin();
       }
     }

@@ -34,6 +34,7 @@ export default function AddMedicine() {
         swal("Success add medicine", "Medicine added!", "success");
       })
       .catch(err => {
+        console.log('kena di sini');
         console.log(err);
       })
   }
