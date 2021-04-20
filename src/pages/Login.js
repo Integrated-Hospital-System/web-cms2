@@ -4,7 +4,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
 import axios from '../axios/axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 function Copyright() {
   return (
@@ -60,6 +60,7 @@ export default function SignInSide() {
     password : ''
   })
   const dispatch = useDispatch();
+  const accountStorage = useSelector(state => state.accountStorage);
 
   const login = () => {
     history.push('/appointments');
@@ -80,6 +81,7 @@ export default function SignInSide() {
 
   function handleSubmit (event) {
     event.preventDefault();
+
     axios({
       method: 'POST',
       url : '/login',
@@ -97,6 +99,7 @@ export default function SignInSide() {
       .catch(err => {
         console.log(err);
       })
+    
   }
 
   return (

@@ -33,25 +33,29 @@ function App() {
   const accountStorage = useSelector(state => state.accountStorage);
   const [role, setRole] = useState('');
 
+  function getCurrentUser () {
+    axios(
+      {
+        url : 'accounts/index',
+        headers : {
+          access_token : localStorage.getItem('access_token')
+        }
+      }
+    )
+      .then(accounts => {
+        dispatch({ type : 'accounts/getAccount', payload : accounts.data })
+        setRole(accounts.data.role);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
   useEffect(() => {
     if (accountStorage !== undefined) {
       setRole(accountStorage.role);
     } else {
-      axios(
-        {
-          url : 'accounts/index',
-          headers : {
-            access_token : localStorage.getItem('access_token')
-          }
-        }
-      )
-        .then(accounts => {
-          dispatch({ type : 'accounts/getAccount', payload : accounts.data })
-          setRole(accounts.data.role);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+      getCurrentUser();
     }
   }, [])
 
@@ -75,7 +79,7 @@ function App() {
       <GuardedRoute path="/editDoctor/:id" meta={{ auth : true }} component={EditDoctor} />
       <GuardedRoute path="/medicines" meta={{ auth : true }} component={Medicines} />
       <GuardProvider guards = { [requireAdmin] }>
-        <GuardedRoute path="/doctors" meta={{ auth : true, role }} component={Doctors} />
+        <GuardedRoute path="/doctors" meta={{ auth : true, role : role }} component={Doctors} />
       </GuardProvider>
     </div>
     </div>
