@@ -14,10 +14,11 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { Button, Container, TableHead, TextField } from '@material-ui/core';
+import { Button, Container, TableHead, TextField, CircularProgress } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import axios from '../axios/axios';
 import Row from './Row';
+import Loading from './Loading';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -108,7 +109,8 @@ const useStyles2 = makeStyles({
     backgroundColor: '#00F6B5',
     textAlign: 'right',
     color : 'black'
-  }
+  },
+
 });
 
 export default function Doctors() {
@@ -117,8 +119,10 @@ export default function Doctors() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filter, setFilter] = useState('');
   const [rows, setRows] = useState([]);
-
+  const [loading, setLoading] = useState(false);
+  
   useEffect(() => {
+    setLoading(true);
     axios(
       '/accounts/?role=Doctor', {
         headers : {
@@ -134,7 +138,14 @@ export default function Doctors() {
       .catch(err => {
         console.log(err);
       })
+      .finally(_ => {
+        setLoading(false);
+      })
+
+    // runTest()
   }, [])
+
+
 
   const rowsToShow = filter === "" ? rows : rows.filter(row => row.name.toLowerCase().includes(filter.toLowerCase()));
 
@@ -163,6 +174,12 @@ export default function Doctors() {
     let newRows = rows.filter(row => row._id !== id);
     setRows(newRows);
   }
+
+  if (loading) {
+    return (
+      <Loading></Loading>
+    )
+  };
 
   return (
     <Container>

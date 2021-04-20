@@ -18,6 +18,7 @@ import { Button, Container, TableHead, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import swal from 'sweetalert';
 import axios from '../axios/axios';
+import Loading from './Loading';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -117,8 +118,21 @@ export default function Doctors() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [filter, setFilter] = useState('');
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+async function delay(ms) {
+    // return await for better async stack trace support in case of errors.
+    return await new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function runTest () {
+    setLoading(true)
+    await delay(3000);
+    setLoading(false);
+  }
 
   useEffect(() => {
+    setLoading(true);
     axios({
       method : 'GET',
       url : '/medicines',
@@ -132,6 +146,9 @@ export default function Doctors() {
       })
       .catch(err => {
         console.log(err);
+      })
+      .finally(_ => {
+        setLoading(false);
       })     
   }, [])
 
@@ -193,6 +210,12 @@ export default function Doctors() {
 
   function editMedicine (id) {
     history.push('/editMedicine/' + id);
+  }
+
+  if (loading) {
+    return (
+      <Loading></Loading>
+    )
   }
 
   return (

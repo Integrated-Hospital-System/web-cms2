@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { Button, Container } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import axios from '../axios/axios';
+import Loading from './Loading';
 
 const useStyles = makeStyles({
   table: {
@@ -24,8 +25,10 @@ export default function Appointments() {
   const classes = useStyles();
   const history = useHistory();
   const [rows, setRows] = useState([]);
-
+  const [loading, setLoading] = useState(false);
+  
   useEffect(() => {
+    setLoading(true);
     axios({
       method: 'GET',
       url : '/appointments',
@@ -42,10 +45,19 @@ export default function Appointments() {
       .catch (err => {
         console.log(err);
       })
+      .finally(_ => {
+        setLoading(false);
+      })
   }, [])
 
   const addOrders = (id) => {
     history.push('/addOrders/' + id);
+  }
+
+  if (loading) {
+    return (
+      <Loading></Loading>
+    )
   }
 
   return (
@@ -76,8 +88,11 @@ export default function Appointments() {
               <TableCell align="left">{ row.appointmentDate.substring(0, 10) }</TableCell>
               <TableCell align="left"> 
                 <Button variant="contained" style={{backgroundColor: "#1de9b6"}} onClick={ () => addOrders(row._id) }>
-                Process
-                </Button> </TableCell>
+                  Process
+                </Button> 
+                
+              </TableCell>
+                
             </TableRow>
           ))}
         </TableBody>
