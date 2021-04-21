@@ -1,0 +1,287 @@
+{
+  "accounts": [
+    {
+      "id": "1",
+      "name": "Budi",
+      "username": "budi",
+      "email": "budi@email.com",
+      "password": "budi",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "name": "Hasan",
+      "username": "hasan",
+      "email": "hasan@email.com",
+      "password": "hasan",
+      "role": "doctor",
+      "speciality": [
+        "tht",
+        "organ dalam"
+      ],
+      "practice": [
+        {
+          "day": "monday",
+          "start": "9:15",
+          "end": "15:45"
+        },
+        {
+          "day": "tuesday",
+          "start": "9:15",
+          "end": "15:45"
+        },
+        {
+          "day": "wednesday",
+          "start": "9:15",
+          "end": "15:45"
+        },
+        {
+          "day": "thursday",
+          "start": "9:15",
+          "end": "15:45"
+        },
+        {
+          "day": "friday",
+          "start": "9:15",
+          "end": "11:45"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Ratna",
+      "username": "ratna",
+      "email": "ratna@email.com",
+      "password": "ratna",
+      "role": "doctor",
+      "speciality": [
+        "mata",
+        "organ dalam"
+      ],
+      "practice": [
+        {
+          "day": "monday",
+          "start": "8:15",
+          "end": "17:45"
+        },
+        {
+          "day": "tuesday",
+          "start": "8:17",
+          "end": "17:45"
+        },
+        {
+          "day": "thursday",
+          "start": "8:17",
+          "end": "17:45"
+        },
+        {
+          "day": "friday",
+          "start": "8:15",
+          "end": "11:45"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Sari",
+      "username": "sari",
+      "email": "sari@email.com",
+      "password": "sari",
+      "role": "patient",
+      "age": 28,
+      "gender": "female",
+      "comorbid": [
+        "mual"
+      ]
+    },
+    {
+      "id": "5",
+      "name": "Gunawan",
+      "username": "gunawan",
+      "email": "gunawan@email.com",
+      "password": "gunawan",
+      "role": "patient",
+      "age": 50,
+      "gender": "male",
+      "comorbid": [
+        "diabetes"
+      ]
+    },
+    {
+      "name": "Krisna Kris",
+      "email": "krisna.post@gmail.com",
+      "password": "1234",
+      "speciality": [
+        "Orthopedy",
+        "   tht"
+      ],
+      "image_url": "google.com",
+      "practice": [
+        {
+          "day": "Monday",
+          "start": "15:00",
+          "end": "16:00"
+        },
+        {
+          "day": "Tuesday",
+          "start": "15:00",
+          "end": "16:00"
+        }
+      ],
+      "role": "doctor",
+      "id": "hVoZTcq"
+    },
+    {
+      "name": "Krisna",
+      "email": "krisna.post@gmail.com",
+      "password": "12345",
+      "age": "23",
+      "gender": "Male",
+      "speciality": [
+        "Orthopedy",
+        " tht"
+      ],
+      "image_url": "google.com",
+      "practice": [
+        {
+          "day": "Monday",
+          "start": "15:45",
+          "end": "16:44"
+        },
+        {
+          "day": "Tuesday",
+          "start": "15:45",
+          "end": "16:44"
+        }
+      ],
+      "role": "doctor",
+      "id": "kpVboO5"
+    }
+  ],
+  "medicines": [
+    {
+      "name": "panadol",
+      "description": "sakit kepala",
+      "stock": "887",
+      "id": "1"
+    },
+    {
+      "name": "vitamin D",
+      "description": "vitamin",
+      "stock": "8",
+      "id": "2"
+    },
+    {
+      "name": "sakatonik",
+      "description": "vitamin",
+      "stock": "6",
+      "id": "3"
+    },
+    {
+      "name": "podes",
+      "description": "ayam bakar",
+      "stock": "2",
+      "id": "f2hgyUq"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "1",
+      "doctor": {
+        "id": "2",
+        "name": "Hasan",
+        "username": "hasan",
+        "email": "hasan@email.com",
+        "password": "hasan",
+        "role": "doctor"
+      },
+      "patient": {
+        "id": "5",
+        "name": "Gunawan",
+        "username": "gunawan",
+        "email": "gunawan@email.com",
+        "password": "gunawan",
+        "role": "patient",
+        "age": 50,
+        "gender": "male",
+        "comorbid": [
+          "diabetes"
+        ]
+      },
+      "appointmentDate": "15/04/2021 20:00",
+      "isCompleted": false
+    },
+    {
+      "id": "2",
+      "doctor": {
+        "id": "2",
+        "name": "Hasan",
+        "username": "hasan",
+        "email": "hasan@email.com",
+        "password": "hasan",
+        "role": "doctor"
+      },
+      "patient": {
+        "id": "4",
+        "name": "Sari",
+        "username": "sari",
+        "email": "sari@email.com",
+        "password": "sari",
+        "role": "patient",
+        "age": 28,
+        "gender": "female",
+        "comorbid": [
+          "diabetes"
+        ]
+      },
+      "appointmentDate": "15/04/2021 21:00",
+      "isCompleted": false
+    }
+  ],
+  "orders": [
+    {
+      "id": "1",
+      "appointment": {
+        "id": "1",
+        "doctor": {
+          "id": "2",
+          "name": "Hasan",
+          "username": "hasan",
+          "email": "hasan@email.com",
+          "password": "hasan",
+          "role": "doctor"
+        },
+        "patient": {
+          "id": "5",
+          "name": "Gunawan",
+          "username": "gunawan",
+          "email": "gunawan@email.com",
+          "password": "gunawan",
+          "role": "patient",
+          "age": 50,
+          "gender": "male",
+          "comorbid": [
+            "diabetes"
+          ]
+        },
+        "appointmentDate": "15/04/2021 20:00",
+        "isCompleted": false
+      },
+      "medicines": [
+        {
+          "medicine": {
+            "id": "1",
+            "name": "panadol",
+            "description": "sakit kepala"
+          },
+          "timesPerDay": 2,
+          "doses": 3,
+          "totalMedicine": 9
+        }
+      ],
+      "diseases": [
+        "migraine"
+      ]
+    }
+  ]
+}
