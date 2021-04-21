@@ -144,6 +144,7 @@ export default function OrdersHistory() {
 
   let rowsToShow = filter === "" ? rows : rows.filter(row => row.appointment.patient.name.toLowerCase().includes(filter.toLowerCase()));
 
+  
   rowsToShow = rowsToShow.sort(function (a, b) {
     return new Date(b.appointmentDate) - new Date(a.appointmentDate);
   })
