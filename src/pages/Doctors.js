@@ -120,9 +120,30 @@ export default function Doctors() {
   const [filter, setFilter] = useState('');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  
-  useEffect(() => {
-    setLoading(true);
+  const history = useHistory();
+
+  function getCurrentRole () {
+    axios(
+      {
+        url : 'accounts/index',
+        headers : {
+          access_token : localStorage.getItem('access_token')
+        }
+      }
+    )
+      .then(accounts => {
+        if (accounts.data.role === 'Admin') {
+          return getListDoctor();
+        } else {
+          history.push('/');
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  function getListDoctor () {
     axios(
       '/accounts/?role=Doctor', {
         headers : {
@@ -141,6 +162,12 @@ export default function Doctors() {
       .finally(_ => {
         setLoading(false);
       })
+  }
+
+
+  useEffect(() => {
+    setLoading(true);
+    getCurrentRole();
 
     }, [])
 
@@ -157,7 +184,6 @@ export default function Doctors() {
     setPage(0);
   };
 
-  const history = useHistory();
 
   function addDoctor () {
     history.push('/addDoctor');

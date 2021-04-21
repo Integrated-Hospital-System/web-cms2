@@ -3,7 +3,6 @@ import { Avatar, Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typogra
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
-import axios from '../axios/axios';
 import { useDispatch, useSelector } from 'react-redux';
 import swal from 'sweetalert';
 import { asyncGetAccount } from '../store/action';

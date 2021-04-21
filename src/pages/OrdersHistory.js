@@ -171,11 +171,6 @@ export default function OrdersHistory() {
     )
   }
 
-  // <TableCell component="th" scope="row"> { row.appointment.patient.name } </TableCell>
-  // <TableCell align="left">{ row.appointment.patient.email }</TableCell>
-  // <TableCell align="left">{ row.diseases.join(', ') }</TableCell>
-  // <TableCell align="left">{ row.appointment.appointmentDate.substring(0, 10) }</TableCell>
-
   return (
     <Container>
     <h3> List of order history </h3>
