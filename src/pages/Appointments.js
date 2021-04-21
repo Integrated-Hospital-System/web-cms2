@@ -26,7 +26,7 @@ export default function Appointments() {
   const history = useHistory();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+
   useEffect(() => {
     setLoading(true);
     axios({
@@ -39,7 +39,12 @@ export default function Appointments() {
       .then(result => {
         result = result.data;
         let completedFalse = result.filter(result => result.isCompleted === false); 
-        let recentAppointment = completedFalse.filter(appointment => appointment.appointmentDate > new Date().toISOString());         
+        let recentAppointment = completedFalse.filter((appointment) => {
+          let newDate = new Date(appointment.appointmentDate);
+          if (newDate.toLocaleDateString() >= new Date().toLocaleDateString()) {
+            return appointment
+          }
+        });         
         setRows(recentAppointment);
       })
       .catch (err => {

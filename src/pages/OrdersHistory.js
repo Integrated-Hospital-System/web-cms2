@@ -16,9 +16,9 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import { Button, Container, TableHead, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router';
-import swal from 'sweetalert';
 import axios from '../axios/axios';
 import Loading from './Loading';
+import RowOrder from './RowOrder';
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
@@ -132,7 +132,6 @@ export default function OrdersHistory() {
       .then(ordersRes => {
         let orders = ordersRes.data;
         let cleanOrders = orders.filter(order => Object.keys(order).length > 0);
-        console.log('cleanOrders: ', cleanOrders);
         setRows(cleanOrders);
       })
       .catch(err => {
@@ -162,15 +161,16 @@ export default function OrdersHistory() {
     setFilter(event.target.value);
   }
 
-  function editMedicine (id) {
-    history.push('/editMedicine/' + id);
-  }
-
   if (loading) {
     return (
       <Loading></Loading>
     )
   }
+
+  // <TableCell component="th" scope="row"> { row.appointment.patient.name } </TableCell>
+  // <TableCell align="left">{ row.appointment.patient.email }</TableCell>
+  // <TableCell align="left">{ row.diseases.join(', ') }</TableCell>
+  // <TableCell align="left">{ row.appointment.appointmentDate.substring(0, 10) }</TableCell>
 
   return (
     <Container>
@@ -184,11 +184,11 @@ export default function OrdersHistory() {
       <Table className={classes.table} stickyHeader aria-label="custom pagination table">
         <TableHead >
           <TableRow>
+            <TableCell align="left" className= { classes.header }></TableCell>
             <TableCell align="left" className= { classes.header }>Name</TableCell>
             <TableCell align="left" className= { classes.header }>Email</TableCell>
             <TableCell align="left" className= { classes.header }>Disease</TableCell>
             <TableCell align="left" className= { classes.header }>Appointment Date</TableCell>
-            <TableCell align="left" className= { classes.header }>Options</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -196,16 +196,7 @@ export default function OrdersHistory() {
             ? rowsToShow.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rowsToShow
           ).map((row, index) => (
-            <TableRow key={ index }>
-              <TableCell component="th" scope="row"> { row.appointment.patient.name } </TableCell>
-              <TableCell align="left">{ row.appointment.patient.email }</TableCell>
-              <TableCell align="left">{ row.diseases.join(', ') }</TableCell>
-              <TableCell align="left">{ row.appointment.appointmentDate.substring(0, 10) }</TableCell>
-              <TableCell align="left">
-                <Button variant="contained" style={{backgroundColor: "#1de9b6"}} onClick = { () => editMedicine(row._id) }> Detail </Button>
-              </TableCell>
-
-            </TableRow>
+            <RowOrder row = { row }></RowOrder>
           ))}
 
           {emptyRows > 0 && (

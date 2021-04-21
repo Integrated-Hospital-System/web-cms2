@@ -142,8 +142,7 @@ export default function Doctors() {
         setLoading(false);
       })
 
-    // runTest()
-  }, [])
+    }, [])
 
 
 
