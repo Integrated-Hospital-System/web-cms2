@@ -26,7 +26,10 @@ const useRowStyles = makeStyles({
     "& > *": {
       borderBottom: "unset"
     }
-  }
+  },
+  header: {
+    fontWeight: "bold"
+  },
 });
 
 export default function RowOrder (props) {
@@ -63,10 +66,10 @@ export default function RowOrder (props) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="left">Name</TableCell>
-                    <TableCell align="left">Times Per Day</TableCell>
-                    <TableCell align="left">Doses</TableCell>
-                    <TableCell align="left">Total Medicine</TableCell>
+                    <TableCell align="left" className= { classes.header }>Name</TableCell>
+                    <TableCell align="left" className= { classes.header }>Times Per Day</TableCell>
+                    <TableCell align="left" className= { classes.header }>Doses</TableCell>
+                    <TableCell align="left" className= { classes.header }>Total Medicine</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

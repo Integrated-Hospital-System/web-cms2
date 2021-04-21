@@ -14,7 +14,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { Button, Container, TableHead, TextField, CircularProgress } from '@material-ui/core';
+import { Button, Container, TableHead, TextField } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import axios from '../axios/axios';
 import Row from './Row';
@@ -143,8 +143,6 @@ export default function Doctors() {
       })
 
     }, [])
-
-
 
   const rowsToShow = filter === "" ? rows : rows.filter(row => row.name.toLowerCase().includes(filter.toLowerCase()));
 

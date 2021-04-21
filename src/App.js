@@ -54,7 +54,7 @@ function App() {
 
   useEffect(() => {
     getCurrentUser();
-  })
+  }, [])
 
   const LoginContainer = () => (
     <div className="container">

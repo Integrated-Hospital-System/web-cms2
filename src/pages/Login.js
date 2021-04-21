@@ -91,6 +91,8 @@ export default function SignInSide() {
       } else if (test.account.role === 'Admin') {
         loginAdmin();
       }
+    } else {
+      swal("Cannot login!", 'Invalid email or password', "error");
     }
 
   }

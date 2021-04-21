@@ -26,7 +26,10 @@ const useRowStyles = makeStyles({
     "& > *": {
       borderBottom: "unset"
     }
-  }
+  },
+  header: {
+    fontWeight: "bold"
+  },
 });
 
 export default function Row(props) {
@@ -113,9 +116,9 @@ export default function Row(props) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="left">Day</TableCell>
-                    <TableCell align="left">Start</TableCell>
-                    <TableCell align="left">End</TableCell>
+                    <TableCell align="left" className= { classes.header }>Day</TableCell>
+                    <TableCell align="left" className= { classes.header }>Start</TableCell>
+                    <TableCell align="left" className= { classes.header }>End</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
