@@ -10,7 +10,6 @@ import axios from './axios/axios';
 import { useState } from 'react';
 import NotFound from './pages/NotFound';
 import OrderHistory from './pages/OrdersHistory';
-import DetailOrder from './pages/DetailOrder';
 
 const requireLogin = (to, from, next) => {
   if (to.meta.auth) {
@@ -77,8 +76,6 @@ function App() {
       <GuardedRoute path="/editDoctor/:id" meta={{ auth : true }} component={EditDoctor} />
       <GuardedRoute path="/medicines" meta={{ auth : true }} component={Medicines} />
       <GuardedRoute path="/orderHistory" meta={{ auth : true }} component={OrderHistory} />
-      <GuardedRoute path="/detailOrder/:id" meta={{ auth : true }} component={DetailOrder} />
-
       <GuardProvider guards = { [requireAdmin] }>
         <GuardedRoute path="/doctors" meta={{ auth : true, role : role }} component={Doctors} />
       </GuardProvider>
