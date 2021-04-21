@@ -78,7 +78,6 @@ function App() {
       <GuardedRoute path="/medicines" meta={{ auth : true }} component={Medicines} />
       <GuardedRoute path="/orderHistory" meta={{ auth : true }} component={OrderHistory} />
       <GuardedRoute path="/doctors" meta={{ auth : true, role : role }} component={Doctors} />
-  
       
     </div>
     </div>

@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
+import { Avatar } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -56,15 +57,15 @@ export default function Navbar() {
         <Button onClick = { logout } href="#" color="primary" variant="outlined" className={classes.link}>
           Logout
         </Button>
-      </Link>
+        </Link>
       )
     } else {
       return (
         <Link to="/login">
-        <Button onClick = { logout } href="#" color="primary" variant="outlined" className={classes.link}>
-          Login
-        </Button>
-      </Link>
+          <Button onClick = { logout } href="#" color="primary" variant="outlined" className={classes.link}>
+            Login
+          </Button>
+        </Link>
       )
     }
   }
