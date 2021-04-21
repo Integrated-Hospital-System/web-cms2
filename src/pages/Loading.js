@@ -11,7 +11,7 @@ export default function Loading () {
       alignItems : "center",
       marginTop : "270px"
     }}>
-      <CircularProgress color="#1de9b6" size= {200} />
+      <CircularProgress color="#1de9b6"  />
     </div>
   )
   

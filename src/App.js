@@ -10,6 +10,7 @@ import axios from './axios/axios';
 import { useState } from 'react';
 import NotFound from './pages/NotFound';
 import OrderHistory from './pages/OrdersHistory';
+import DetailOrder from './pages/DetailOrder';
 
 const requireLogin = (to, from, next) => {
   if (to.meta.auth) {
@@ -32,7 +33,6 @@ const requireAdmin = (to, from, next) => {
 
 function App() {
   const dispatch = useDispatch();
-  // const accountStorage = useSelector(state => state.accountStore);
   const [role, setRole] = useState('');
 
   function getCurrentUser () {
@@ -54,12 +54,6 @@ function App() {
   }
 
   useEffect(() => {
-    // if (accountStorage !== undefined) {
-    //   console.log(1);
-    //   setRole(accountStorage.role);
-    // } else {
-    //   console.log(2);
-    // }
     getCurrentUser();
   })
 
@@ -83,6 +77,7 @@ function App() {
       <GuardedRoute path="/editDoctor/:id" meta={{ auth : true }} component={EditDoctor} />
       <GuardedRoute path="/medicines" meta={{ auth : true }} component={Medicines} />
       <GuardedRoute path="/orderHistory" meta={{ auth : true }} component={OrderHistory} />
+      <GuardedRoute path="/detailOrder/:id" meta={{ auth : true }} component={DetailOrder} />
 
       <GuardProvider guards = { [requireAdmin] }>
         <GuardedRoute path="/doctors" meta={{ auth : true, role : role }} component={Doctors} />
