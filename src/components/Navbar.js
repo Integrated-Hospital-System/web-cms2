@@ -123,6 +123,9 @@ export default function Navbar() {
             <Link to="/appointments" className={classes.link}>
               Appointment
             </Link>
+            <Link to="/orderHistory" className={classes.link}>
+              Order History
+            </Link>
             { showLogout() }
           </div>
       </Toolbar>

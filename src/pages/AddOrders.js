@@ -184,7 +184,7 @@ export default function AddOrders() {
 
     let newOrders = {
       medicines : rows,
-      diseases : disease.split(';')
+      diseases : disease.split(';').map(e => e.trim())
     }
     postOrders(newOrders);
   }

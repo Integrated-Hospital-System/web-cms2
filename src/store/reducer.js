@@ -4,15 +4,16 @@ const initialState = {
   }
 }
 
-export default function reducer (state = initialState, action) {
+function reducer (state = initialState, action) {
   const { type, payload } = action;
-
   switch (type) {
     case 'accounts/getAccount' :
-      return { ...state, accountStore : payload }
+      return { ...initialState, accountStore : payload }
     case 'accounts/deleteAccount' :
       return { ...state, accountStore : payload }
     default : 
       return state;
   }
 }
+
+export default reducer;

@@ -15,10 +15,9 @@ export default function EditMedicine() {
   const history = useHistory();
 
   useEffect(() => {
-    console.log('masuk');
     axios({
       method: 'GET',
-      url : 'http://localhost:3000/medicines/' + params.id,
+      url : '/medicines/' + params.id,
       headers : {
         access_token : localStorage.getItem('access_token')
       }

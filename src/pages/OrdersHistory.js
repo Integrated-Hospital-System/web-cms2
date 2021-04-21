@@ -112,7 +112,7 @@ const useStyles2 = makeStyles({
   }
 });
 
-export default function Doctors() {
+export default function OrdersHistory() {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -124,14 +124,16 @@ export default function Doctors() {
     setLoading(true);
     axios({
       method : 'GET',
-      url : '/medicines',
+      url : '/orders',
       headers : {
         access_token : localStorage.getItem('access_token')
       }
     })
-      .then(medicinesRes => {
-        let medicines = medicinesRes.data;
-        setRows(medicines);
+      .then(ordersRes => {
+        let orders = ordersRes.data;
+        let cleanOrders = orders.filter(order => Object.keys(order).length > 0);
+        console.log('cleanOrders: ', cleanOrders);
+        setRows(cleanOrders);
       })
       .catch(err => {
         console.log(err);
@@ -141,60 +143,23 @@ export default function Doctors() {
       })     
   }, [])
 
-  const rowsToShow = filter === "" ? rows : rows.filter(row => row.name.toLowerCase().includes(filter.toLowerCase()));
+  const rowsToShow = filter === "" ? rows : rows.filter(row => row.appointment.patient.name.toLowerCase().includes(filter.toLowerCase()));
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rowsToShow.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-  };
+  }
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
+  }
 
   const history = useHistory();
 
-  function addMedicine () {
-    history.push('/addMedicine');
-  }
-
   function searchMedicines (event) {
     setFilter(event.target.value);
-  }
-
-  function deleteMedicine (id) {
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this medicines!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      })
-      .then((willDelete) => {
-        if (willDelete) {
-          axios({
-            method : 'DELETE',
-            url: '/medicines/' + id,
-            headers : {
-              access_token : localStorage.getItem('access_token')
-            }
-          })
-            .then(({ data }) => {
-              swal("Poof! Your medicines has been deleted!", {
-                icon: "success",
-              });
-              let newRows = rows.filter(row => row._id !== id);
-              setRows(newRows);
-            })
-            .catch(err => {
-              console.log(err);
-            })
-        } else {
-          swal("Your medicines is safe!");
-        }
-      });
   }
 
   function editMedicine (id) {
@@ -209,14 +174,10 @@ export default function Doctors() {
 
   return (
     <Container>
-    <h3> List of all Medicines </h3>
-
-    <div style={{float: "right", marginBottom: "10px"}}>
-      <Button variant="contained" style={{backgroundColor: "#1de9b6"}} className = { classes.addButton } onClick = {() => addMedicine() }>Add New Medicines</Button>  
-    </div>
+    <h3> List of order history </h3>
 
     <div>
-      <TextField id="standard-basic" label="Search Medicines" onChange = { event => searchMedicines(event) }/>
+      <TextField id="standard-basic" label="Search Patient Name" onChange = { event => searchMedicines(event) }/>
     </div>
 
     <TableContainer component={Paper}>
@@ -224,10 +185,10 @@ export default function Doctors() {
         <TableHead >
           <TableRow>
             <TableCell align="left" className= { classes.header }>Name</TableCell>
-            <TableCell align="left" className= { classes.header }>Description</TableCell>
-            <TableCell align="left" className= { classes.header }>Stock</TableCell>
+            <TableCell align="left" className= { classes.header }>Email</TableCell>
+            <TableCell align="left" className= { classes.header }>Disease</TableCell>
+            <TableCell align="left" className= { classes.header }>Appointment Date</TableCell>
             <TableCell align="left" className= { classes.header }>Options</TableCell>
-
           </TableRow>
         </TableHead>
         <TableBody>
@@ -236,12 +197,12 @@ export default function Doctors() {
             : rowsToShow
           ).map((row, index) => (
             <TableRow key={ index }>
-              <TableCell component="th" scope="row"> { row.name } </TableCell>
-              <TableCell align="left">{ row.description }</TableCell>
-              <TableCell align="left">{ row.stock }</TableCell>
+              <TableCell component="th" scope="row"> { row.appointment.patient.name } </TableCell>
+              <TableCell align="left">{ row.appointment.patient.email }</TableCell>
+              <TableCell align="left">{ row.diseases.join(', ') }</TableCell>
+              <TableCell align="left">{ row.appointment.appointmentDate.substring(0, 10) }</TableCell>
               <TableCell align="left">
-                <Button variant="contained" color="primary" style={{ marginRight: 30 }} onClick = { () => editMedicine(row._id) }>Edit</Button>
-                <Button variant="contained" color="secondary" onClick = { () => deleteMedicine(row._id) } >Delete</Button>
+                <Button variant="contained" style={{backgroundColor: "#1de9b6"}} onClick = { () => editMedicine(row._id) }> Detail </Button>
               </TableCell>
 
             </TableRow>
@@ -273,7 +234,6 @@ export default function Doctors() {
         </TableFooter>
       </Table>
     </TableContainer>
-    </Container>
-    
+    </Container>    
   );
 }

@@ -4,11 +4,12 @@ import Navbar from './components/Navbar'
 import { Login, Home, Doctors, Medicines, AddDoctor, AddMedicine, Appointments, AddOrders, EditMedicine } from './pages'
 import EditDoctor from './pages/EditDoctor';
 import { GuardProvider, GuardedRoute } from 'react-router-guards';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import axios from './axios/axios';
 import { useState } from 'react';
 import NotFound from './pages/NotFound';
+import OrderHistory from './pages/OrdersHistory';
 
 const requireLogin = (to, from, next) => {
   if (to.meta.auth) {
@@ -31,7 +32,7 @@ const requireAdmin = (to, from, next) => {
 
 function App() {
   const dispatch = useDispatch();
-  const accountStorage = useSelector(state => state.accountStorage);
+  // const accountStorage = useSelector(state => state.accountStore);
   const [role, setRole] = useState('');
 
   function getCurrentUser () {
@@ -44,7 +45,7 @@ function App() {
       }
     )
       .then(accounts => {
-        dispatch({ type : 'accounts/getAccount', payload : accounts.data })
+        dispatch({ type : 'accounts/getAccount', payload : accounts.data });
         setRole(accounts.data.role);
       })
       .catch(err => {
@@ -53,12 +54,14 @@ function App() {
   }
 
   useEffect(() => {
-    if (accountStorage !== undefined) {
-      setRole(accountStorage.role);
-    } else {
-      getCurrentUser();
-    }
-  }, [])
+    // if (accountStorage !== undefined) {
+    //   console.log(1);
+    //   setRole(accountStorage.role);
+    // } else {
+    //   console.log(2);
+    // }
+    getCurrentUser();
+  })
 
   const LoginContainer = () => (
     <div className="container">
@@ -79,6 +82,7 @@ function App() {
       <GuardedRoute path="/addDoctor" meta={{ auth : true }} component={AddDoctor} />
       <GuardedRoute path="/editDoctor/:id" meta={{ auth : true }} component={EditDoctor} />
       <GuardedRoute path="/medicines" meta={{ auth : true }} component={Medicines} />
+      <GuardedRoute path="/orderHistory" meta={{ auth : true }} component={OrderHistory} />
 
       <GuardProvider guards = { [requireAdmin] }>
         <GuardedRoute path="/doctors" meta={{ auth : true, role : role }} component={Doctors} />
