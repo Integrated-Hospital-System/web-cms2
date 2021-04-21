@@ -70,6 +70,10 @@ export default function SignInSide() {
     history.push('/doctors');
   }
 
+  if (localStorage.access_token) {
+    history.push('/');
+  }
+
   function handleChange (event) {
     const target = event.target;
     const value = target.value;
