@@ -54,7 +54,7 @@ function App() {
 
   useEffect(() => {
     getCurrentUser();
-  })
+  }, [])
 
   const LoginContainer = () => (
     <div className="container">
@@ -62,7 +62,8 @@ function App() {
       <Route path="/login" component={ Login } />
     </div>
   )
-
+    // <GuardProvider guards = { [requireAdmin] }>
+      // </GuardProvider>
   const DefaultContainer = () => (
     <div>
     <div className="container">
@@ -76,9 +77,7 @@ function App() {
       <GuardedRoute path="/editDoctor/:id" meta={{ auth : true }} component={EditDoctor} />
       <GuardedRoute path="/medicines" meta={{ auth : true }} component={Medicines} />
       <GuardedRoute path="/orderHistory" meta={{ auth : true }} component={OrderHistory} />
-      <GuardProvider guards = { [requireAdmin] }>
-        <GuardedRoute path="/doctors" meta={{ auth : true, role : role }} component={Doctors} />
-      </GuardProvider>
+      <GuardedRoute path="/doctors" meta={{ auth : true, role : role }} component={Doctors} />
       
     </div>
     </div>

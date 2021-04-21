@@ -142,7 +142,11 @@ export default function OrdersHistory() {
       })     
   }, [])
 
-  const rowsToShow = filter === "" ? rows : rows.filter(row => row.appointment.patient.name.toLowerCase().includes(filter.toLowerCase()));
+  let rowsToShow = filter === "" ? rows : rows.filter(row => row.appointment.patient.name.toLowerCase().includes(filter.toLowerCase()));
+
+  rowsToShow = rowsToShow.sort(function (a, b) {
+    return new Date(b.appointmentDate) - new Date(a.appointmentDate);
+  })
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rowsToShow.length - page * rowsPerPage);
 
@@ -166,11 +170,6 @@ export default function OrdersHistory() {
       <Loading></Loading>
     )
   }
-
-  // <TableCell component="th" scope="row"> { row.appointment.patient.name } </TableCell>
-  // <TableCell align="left">{ row.appointment.patient.email }</TableCell>
-  // <TableCell align="left">{ row.diseases.join(', ') }</TableCell>
-  // <TableCell align="left">{ row.appointment.appointmentDate.substring(0, 10) }</TableCell>
 
   return (
     <Container>

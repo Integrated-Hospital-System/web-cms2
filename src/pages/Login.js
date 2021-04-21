@@ -3,7 +3,6 @@ import { Avatar, Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typogra
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
-import axios from '../axios/axios';
 import { useDispatch, useSelector } from 'react-redux';
 import swal from 'sweetalert';
 import { asyncGetAccount } from '../store/action';
@@ -70,6 +69,10 @@ export default function SignInSide() {
     history.push('/doctors');
   }
 
+  if (localStorage.access_token) {
+    history.push('/');
+  }
+
   function handleChange (event) {
     const target = event.target;
     const value = target.value;
@@ -91,6 +94,8 @@ export default function SignInSide() {
       } else if (test.account.role === 'Admin') {
         loginAdmin();
       }
+    } else {
+      swal("Cannot login!", 'Invalid email or password', "error");
     }
 
   }

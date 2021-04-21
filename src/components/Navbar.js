@@ -6,8 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import axios from '../axios/axios';
-
+import { Avatar } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -48,24 +47,8 @@ export default function Navbar() {
   const accountStore = useSelector(state => state.accountStore);
 
   useEffect(() => {
-
-      // axios(
-      //   {
-      //     url : 'accounts/index',
-      //     headers : {
-      //       access_token : localStorage.getItem('access_token')
-      //     }
-      //   }
-      // )
-      //   .then(accounts => {
-      //     // dispatch({ type : 'accounts/getAccount', payload : accounts.data })
-      //     setRole(accounts.data.role);
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   })
     setRole(accountStore.role);
-  }, [])
+  }, [accountStore])
 
   function showLogout () {
     if (localStorage.access_token) {
@@ -74,15 +57,15 @@ export default function Navbar() {
         <Button onClick = { logout } href="#" color="primary" variant="outlined" className={classes.link}>
           Logout
         </Button>
-      </Link>
+        </Link>
       )
     } else {
       return (
         <Link to="/login">
-        <Button onClick = { logout } href="#" color="primary" variant="outlined" className={classes.link}>
-          Login
-        </Button>
-      </Link>
+          <Button onClick = { logout } href="#" color="primary" variant="outlined" className={classes.link}>
+            Login
+          </Button>
+        </Link>
       )
     }
   }
